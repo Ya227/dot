@@ -1,53 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Dashboard from './pages/dashboard';
+import Landing from './pages/landing';
+
+const routes: Record<string, React.ComponentType> = {
+  '/dot': Landing,
+  '/dot/dashboard': Dashboard,
+};
 
 const App = () => {
-  const [message, setMessage] = useState('Нажмите кнопку, чтобы отправить запрос.');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [path, setPath] = useState(window.location.pathname);
 
-  const requestGreeting = async () => {
-    setLoading(true);
-    setError(null);
+  useEffect(() => {
+    const updatePath = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', updatePath);
 
-    try {
-      const response = await fetch('/api/hello');
-      if (!response.ok) {
-        throw new Error(`Сервер ответил с ошибкой: ${response.status}`);
-      }
+    return () => window.removeEventListener('popstate', updatePath);
+  }, []);
 
-      const data: unknown = await response.json();
-      if (
-        typeof data !== 'object' ||
-        data === null ||
-        !('message' in data) ||
-        typeof data.message !== 'string'
-      ) {
-        throw new Error('Сервер вернул неожиданный ответ.');
-      }
+  const normalizedPath = path.replace(/\/+$/, '') || '/';
+  const Page = routes[normalizedPath] ?? Landing;
 
-      setMessage(data.message);
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : 'Не удалось связаться с сервером.',
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <main>
-      <h1>Проект dot</h1>
-      <p>React отправляет запрос в Express API.</p>
-      <button type="button" onClick={requestGreeting} disabled={loading}>
-        {loading ? 'Отправка...' : 'Проверить сервер'}
-      </button>
-      <p role="status">{message}</p>
-      {error && <p role="alert">{error}</p>}
-    </main>
-  );
+  return <Page />;
 };
 
 export default App;
