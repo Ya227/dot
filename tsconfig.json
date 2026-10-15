@@ -4,12 +4,11 @@
             "dom",
             "es2017"
         ],
-        "outDir": "./dist/",
+        "rootDir": "",
         "sourceMap": true,
         "esModuleInterop": true,
         "noImplicitAny": false,
         "module": "esnext",
-        "moduleResolution": "node",
         "target": "es6",
         "jsx": "react",
         "typeRoots": ["node_modules/@types", "src/typings"],
