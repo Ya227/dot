@@ -1,27 +1,12 @@
 const pkg = require("./package");
 
 module.exports = {
-  //apiPath: "stubs/api",
   webpackConfig: {
     output: {
       publicPath: `/static/${pkg.name}/${process.env.VERSION || pkg.version}/`,
     },
-    devServer: {
-      historyApiFallback: true, 
-      hot: true,
-      port: 8099,
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3001',
-          changeOrigin: true,
-        }
-      }
-    }
   },
-  api: {
-    port: 3001,
-    script: './stubs/api/index.js', 
-  },
+  apiPath: 'server',
 
   /* use https://admin.bro-js.ru/ to create config, navigations and features */
   navigations: {

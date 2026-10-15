@@ -1,18 +1,53 @@
-import React from 'react';
-import express, { type Express, type Request, type Response } from 'express';
+import React, { useState } from 'react';
 
-const app: Express = express();
+const App = () => {
+  const [message, setMessage] = useState('Нажмите кнопку, чтобы отправить запрос.');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello world для проекта - dot')
-});
+  const requestGreeting = async () => {
+    setLoading(true);
+    setError(null);
 
-app.listen(3000);
+    try {
+      const response = await fetch('/api/hello');
+      if (!response.ok) {
+        throw new Error(`Сервер ответил с ошибкой: ${response.status}`);
+      }
 
-`const App = () => {
+      const data: unknown = await response.json();
+      if (
+        typeof data !== 'object' ||
+        data === null ||
+        !('message' in data) ||
+        typeof data.message !== 'string'
+      ) {
+        throw new Error('Сервер вернул неожиданный ответ.');
+      }
+
+      setMessage(data.message);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Не удалось связаться с сервером.',
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <h1>Hello world для проекта - dot</h1>
+    <main>
+      <h1>Проект dot</h1>
+      <p>React отправляет запрос в Express API.</p>
+      <button type="button" onClick={requestGreeting} disabled={loading}>
+        {loading ? 'Отправка...' : 'Проверить сервер'}
+      </button>
+      <p role="status">{message}</p>
+      {error && <p role="alert">{error}</p>}
+    </main>
   );
 };
 
-export default App;`
+export default App;
