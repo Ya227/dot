@@ -1,12 +1,11 @@
-import Navbar from "../features/header";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const landingImage: string = require('../../public/cats.jpg');
 
 function Landing() {
     return (
         <div>
-            <Navbar landing />
             <img src={landingImage} alt="" />
         </div>
     )

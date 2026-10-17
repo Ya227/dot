@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Dashboard from './pages/dashboard';
-import Landing from './pages/landing';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-const routes: Record<string, React.ComponentType> = {
-  '/dot': Landing,
-  '/dot/dashboard': Dashboard,
-};
+import Navbar from "./features/navbar";
+import Landing from "./pages/landing";
+import Dashboard from "./pages/dashboard";
 
-const App = () => {
-  const [path, setPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const updatePath = () => setPath(window.location.pathname);
-    window.addEventListener('popstate', updatePath);
-
-    return () => window.removeEventListener('popstate', updatePath);
-  }, []);
-
-  const normalizedPath = path.replace(/\/+$/, '') || '/';
-  const Page = routes[normalizedPath] ?? Landing;
-
-  return <Page />;
-};
+function App() {
+  return (
+    <BrowserRouter basename="/dot">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
 export default App;
