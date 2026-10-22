@@ -1,58 +1,52 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import * as S from "./navbar.styles";
 
-function Logo({ onClick }: { onClick?: () => void}) {
-    return (
-        <button className="logo" onClick={onClick}>
-            d<span>o</span>t<span className="logo-mark">*</span>
-        </button>
-    )
-}
-
-function Navbar({
-    page,
-    go,
-    openMenu,
-}: {
-    page: string
-    go: (path: string) => void
-    openMenu?: () => void
-}) {
+export const Navbar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const isLandingPage = location.pathname === "/";
 
-    /*Нужно будет добавить лого и что при нажатии открывается главная страница
-    Так же нужна иконка профиля, где тоже будет открываться профиль, пока просто кнопка которая не тыкается*/
+    // Временная заглушка: считаем, что если мы не на лендинге, то пользователь вошел
+    // В будущем здесь будет проверка из контекста авторизации
+    const isAuthenticated = !isLandingPage; 
+
     return (
-        <header className="navbar">
-            <div className="nav-inner">
+        <S.NavbarContainer>
+            <S.NavInner >
+                <S.LogoLink onClick={() => navigate("/")}>
+                    d<span className="dot">.</span>t
+                </S.LogoLink>
                 {isLandingPage ? (
-                    <div className="nav-actions">
-                        <button className="text-button" onClick={() => go("/dashboard")}>
+                    <S.navActions>
+                        <S.AuthButton variant="secondary" onClick={() => navigate("/dashboard")}>
                             Войти
-                        </button>
-                        <button onClick={() => go("/dashboard")}>
+                        </S.AuthButton>
+                        <S.AuthButton variant="primary" onClick={() => navigate("/dashboard")}>
                             Начать бесплатно
-                        </button>
-                    </div>
+                        </S.AuthButton>
+                    </S.navActions>
                 ) : (
-                    <nav className="desktop-nav">
-                        <button className={page === "/dashboard" ? "active" : ""} onClick={() => go("/dashboard")}>
+                    <S.navActions>
+                        <S.NavLink isActive={location.pathname === "/dashboard"} onClick={() => navigate("/dashboard")}>
                             Дашборд
-                        </button>
-                        <button className={page === "/dreams" ? "active" : ""} onClick={() => go("/dreams")}>
+                        </S.NavLink>
+                        <S.NavLink isActive={location.pathname === "/dreams"} onClick={() => navigate("/dreams")}>
                             Мои мечты
-                        </button>
-                        <button className={page === "/habits" ? "active" : ""} onClick={() => go("/habits")}>
+                        </S.NavLink>
+                        <S.NavLink isActive={location.pathname === "/habits"} onClick={() => navigate("/habits")}>
                             Привычки
-                        </button>
-                        <button>Профиль</button> 
-                    </nav>
-                )
-            }
-            </div>
-        </header>
-    )
+                        </S.NavLink>
+                        <Link to="/profile">
+                            <S.ProfileAvatar>
+                                A
+                            </S.ProfileAvatar>
+                        </Link>
+                    </S.navActions>
+                )}
+            </S.NavInner>
+        </S.NavbarContainer>
+    );
 }
 
 export default Navbar;
