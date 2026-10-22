@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { GlobalStyles } from './assets/globalStyles';
 import App from './app';
 
 let root: ReactDOM.Root | null = null;
@@ -8,7 +9,7 @@ let root: ReactDOM.Root | null = null;
 export default App;
 
 export const mount = (
-  Component: React.ComponentType,
+  Component: React.ComponentType = App,
   element: HTMLElement | null = document.getElementById('app'),
 ) => {
   if (!element) {
@@ -17,11 +18,22 @@ export const mount = (
 
   root?.unmount();
   root = ReactDOM.createRoot(element);
-  root.render(<Component />);
+
+  root.render(
+    <>
+      <GlobalStyles />
+      <Component />
+    </>
+  )
 
   if (module.hot) {
     module.hot.accept('./app', () => {
-      root?.render(<App />);
+      root?.render(
+      <>
+        <GlobalStyles />
+        <App />
+      </>
+      );
     });
   }
 };

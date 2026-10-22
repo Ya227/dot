@@ -18,16 +18,16 @@ export const Navbar = () => {
                     d<span className="dot">.</span>t
                 </S.LogoLink>
                 {isLandingPage ? (
-                    <S.navActions>
+                    <S.NavActions>
                         <S.AuthButton variant="secondary" onClick={() => navigate("/dashboard")}>
                             Войти
                         </S.AuthButton>
                         <S.AuthButton variant="primary" onClick={() => navigate("/dashboard")}>
                             Начать бесплатно
                         </S.AuthButton>
-                    </S.navActions>
+                    </S.NavActions>
                 ) : (
-                    <S.navActions>
+                    <S.NavActions>
                         <S.NavLink isActive={location.pathname === "/dashboard"} onClick={() => navigate("/dashboard")}>
                             Дашборд
                         </S.NavLink>
@@ -42,7 +42,7 @@ export const Navbar = () => {
                                 A
                             </S.ProfileAvatar>
                         </Link>
-                    </S.navActions>
+                    </S.NavActions>
                 )}
             </S.NavInner>
         </S.NavbarContainer>

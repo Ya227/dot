@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { motion } from "framer-motion";
 
 export const NavbarContainer = styled.header`
   background: rgba(255, 255, 255, .92);
@@ -38,10 +37,10 @@ export const LogoLink = styled.a`
   }
 `;
 
-export const navActions = styled.nav`
+export const NavActions = styled.nav`
   align-items: center;
   display: flex;
-  gap: 12px;
+  gap: 16px;
 `;
 
 export const NavLink = styled.a<{ isActive?: boolean }>`
