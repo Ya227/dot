@@ -1,12 +1,10 @@
 import React from 'react';
 
-const dashboardImage: string = require('../../public/сonfue.jpg');
-
-export const Dreams = () => {
+function Dreams() {
     return (
         <div>
             <h1>Пока не готово!</h1>
-            <img src={dashboardImage} alt="" />
+            <img src="/confue.jpg" alt="" />
         </div>
     )
 }

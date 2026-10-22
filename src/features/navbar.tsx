@@ -1,16 +1,14 @@
 import React from "react";
+
 import { useLocation, useNavigate, Link } from "react-router-dom";
+
 import * as S from "./navbar.styles";
 
 export const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isLandingPage = location.pathname === "/";
-
-    // Временная заглушка: считаем, что если мы не на лендинге, то пользователь вошел
-    // В будущем здесь будет проверка из контекста авторизации
-    const isAuthenticated = !isLandingPage; 
-
+    
     return (
         <S.NavbarContainer>
             <S.NavInner >

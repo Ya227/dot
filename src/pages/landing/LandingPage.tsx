@@ -1,8 +1,10 @@
 import React from "react";
+
 import { useNavigate } from "react-router-dom";
+
+import * as S from "./LandingPage.styles";
 import ChatMockup from "../../components/chatMockup/chatMocup";
 import { featuresList } from "../../components/features/features";
-import * as S from "./LandingPage.styles";
 
 const featureIconClasses = ["icon-purple", "icon-green", "icon-orange"];
 

@@ -1,11 +1,12 @@
 import React from "react";
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Navbar from "./features/navbar";
-import Landing from "./pages/landing/LandingPage";
 import Dashboard from "./pages/dashboard";
 import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
+import Landing from "./pages/landing/LandingPage";
 
 export const App = () => {
   return (

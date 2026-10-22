@@ -1,12 +1,10 @@
 import React from 'react';
 
-const dashboardImage: string = require('../../public/сonfue.jpg');
-
 function Dashboard() {
     return (
         <div>
             <h1>Пока не готово!</h1>
-            <img src={dashboardImage} alt="" />
+            <img src="/confue.jpg" alt="" />
         </div>
     )
 }

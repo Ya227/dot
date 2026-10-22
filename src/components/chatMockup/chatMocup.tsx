@@ -1,4 +1,5 @@
 import React from "react";
+
 import * as S from "./chatMocup.styles";
 
 // --- Встроенные иконки (чтобы не подключать лишние библиотеки) ---

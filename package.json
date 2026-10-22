@@ -10,7 +10,8 @@
         "build:prod": "npm run clean && brojs build",
         "clean": "rimraf dist",
         "compile": "brojs compile",
-        "prom": "npm run compile && brojs prom-server --port=8099"
+        "prom": "npm run compile && brojs prom-server --port=8099",
+        "lint": "eslint ."
     },
     "repository": {
         "type": "git",
@@ -37,8 +38,14 @@
         "react-router-dom": "^6.30.6"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@types/express": "^5.0.6",
         "@types/node": "^26.6.5",
-        "typescript": "^5.9.3"
+        "eslint": "^9.39.5",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-import": "^2.32.0",
+        "prettier": "^3.9.10",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.72.0"
     }
 }

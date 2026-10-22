@@ -1,8 +1,9 @@
 import React from 'react';
+
 import ReactDOM from 'react-dom/client';
 
-import { GlobalStyles } from './assets/globalStyles';
 import App from './app';
+import { GlobalStyles } from './assets/globalStyles';
 
 let root: ReactDOM.Root | null = null;
 
