@@ -7,6 +7,7 @@ import Dashboard from "./pages/dashboard";
 import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
 import Landing from "./pages/landing/LandingPage";
+import AboutDream from "./features/aboutDream/planDream";
 
 export const App = () => {
   return (
@@ -17,6 +18,7 @@ export const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dreams" element={<Dreams />} />
         <Route path="/habits" element={<Habits />} />
+        <Route path="/aboutDream" element={<AboutDream />} />
       </Routes>
     </BrowserRouter>
   );

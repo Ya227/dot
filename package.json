@@ -5,7 +5,7 @@
     "main": "./src/index.tsx",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "brojs server --port=8099 --with-open-browser",
+        "start": "npx --package=@brojs/cli brojs server --port=8099 --with-open-browser",
         "build": "npm run clean && brojs build --dev",
         "build:prod": "npm run clean && brojs build",
         "clean": "rimraf dist",
@@ -31,11 +31,13 @@
         "@emotion/styled": "^11.14.1",
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
+        "@types/styled-components": "^5.1.36",
         "express": "^4.22.3",
         "framer-motion": "^14.6.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "react-router-dom": "^6.30.6"
+        "react-router-dom": "^6.30.6",
+        "styled-components": "^6.6.0"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.0",
