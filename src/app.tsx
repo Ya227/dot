@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Navbar from "./features/navbar";
 import Dashboard from "./pages/dashboard";
+import FormDreams from "./pages/dreamform";
 import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
 import Landing from "./pages/landing/LandingPage";
@@ -17,6 +18,7 @@ export const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dreams" element={<Dreams />} />
         <Route path="/habits" element={<Habits />} />
+        <Route path="/dreamform" element={<FormDreams />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
 import styled from "@emotion/styled";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import im1 from '../../public/CatsCafe.jpg'
+import im1 from "../../public/CatsCafe.jpg";
 import { WelcomeBanner } from "../components/welcomeBanner/welcomeBanner";
-import { DreamCard } from '../features/dreamCard/dreamCard';
-import { StreakCard } from '../features/streakCard/streakCard';
-import { WeekProgress } from '../features/weekProgress/weekProgress';
+import { DreamCard } from "../features/dreamCard/dreamCard";
+import { StreakCard } from "../features/streakCard/streakCard";
+import { WeekProgress } from "../features/weekProgress/weekProgress";
 
 const PageContainer = styled.div`
   max-width: 1280px;
@@ -41,7 +41,7 @@ function Dashboard() {
     const navigate = useNavigate();
     return (
         <PageContainer>
-            <WelcomeBanner/>
+            <WelcomeBanner onNewDreamClick={() => navigate('/dreamform')} />
             
             <DashboardLayout>
                 <div>
