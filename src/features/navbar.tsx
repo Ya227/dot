@@ -17,7 +17,7 @@ export const Navbar = () => {
                 </S.LogoLink>
                 {isLandingPage ? (
                     <S.NavActions>
-                        <S.AuthButton variant="secondary" onClick={() => navigate("/dashboard")}>
+                        <S.AuthButton variant="secondary" onClick={() => navigate("/registration")}>
                             Войти
                         </S.AuthButton>
                         <S.AuthButton variant="primary" onClick={() => navigate("/dashboard")}>
