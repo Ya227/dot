@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as S from './planDreamStyles';
+import * as S from './planDream.styles';
 
 export interface PlanStep {
   id: string;
