@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Navbar from "./features/navbar";
 import Dashboard from "./pages/dashboard";
+import FormDreams from "./pages/dreamform";
 import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
 import Landing from "./pages/landing/LandingPage";
@@ -23,6 +24,7 @@ export const App = () => {
         <Route path="/registration" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dreamform" element={<FormDreams />} />
       </Routes>
     </BrowserRouter>
   );
