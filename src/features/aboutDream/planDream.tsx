@@ -77,39 +77,15 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
         </div>
 
         <S.WeeklyWidget>
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: '50%',
-              flexShrink: 0,
-              background: `conic-gradient(
-                var(--purple, #7C3AED) ${progressDeg}deg,
-                var(--lavender, #EDE9FE) ${progressDeg}deg
-              )`,
-              display: 'grid',
-              placeItems: 'center',
-              transition: 'background 0.35s ease',
-            }}
+          <S.ProgressCircle 
+            $progressDeg={progressDeg} 
             aria-label={`Progress ${progressPercentage}%`}
           >
-            <div
-              style={{
-                width: 37,
-                height: 37,
-                borderRadius: '50%',
-                background: 'var(--surface, #fff)',
-                display: 'grid',
-                placeItems: 'center',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: 'var(--purple-dark, #5B21B6)',
-              }}
-            >
+            <S.ProgressInner>
               {progressPercentage}%
-            </div>
-          </div>
-          
+            </S.ProgressInner>
+          </S.ProgressCircle>
+        
           <S.WeeklyWidgetInfo>
             <S.WeeklyWidgetCounter>
               {completedCount} of {totalCount}

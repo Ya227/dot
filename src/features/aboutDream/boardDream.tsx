@@ -35,21 +35,6 @@ const COLOR_PRESETS = [
   '#FFCDD2', '#C8E6C9', '#BBDEFB', '#FFE0B2', '#D1C4E9',
 ];
 
-const shapeClipPath = (shape: ShapeType): string => {
-  switch (shape) {
-    case 'circle':
-      return 'circle(50% at 50% 50%)';
-    case 'triangle':
-      return 'polygon(50% 0%, 0% 100%, 100% 100%)';
-    case 'star':
-      return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-    case 'pentagon':
-      return 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
-    default:
-      return 'none';
-  }
-};
-
 export const DashboardDream: React.FC = () => {
   const now = new Date();
   const [selectedMonth, setSelectedMonth] = useState(MONTHS[now.getMonth()]);
@@ -275,16 +260,7 @@ export const DashboardDream: React.FC = () => {
         </S.HeaderMeta>
       </S.PageHeader>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: 16,
-          alignItems: 'stretch',
-          width: '100%',
-          flex: 1,
-          minHeight: 0,
-        }}
-      >
+      <S.MainContent>
         <S.BoardFrame>
           <S.BoardTopline>
             <div>
@@ -293,7 +269,7 @@ export const DashboardDream: React.FC = () => {
                 Перетаскивайте карточки и меняйте их размеры по своему желанию
               </S.BoardHint>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <S.BoardToplineControls>
               <S.CalendarSelector>
                 <label htmlFor="dream-month">ПЕРИОД</label>
                 <select
@@ -324,7 +300,7 @@ export const DashboardDream: React.FC = () => {
               <S.ItemCounter>
                 {items.length} {items.length === 1 ? 'элемент' : 'элементов'}
               </S.ItemCounter>
-            </div>
+            </S.BoardToplineControls>
           </S.BoardTopline>
 
           <S.BoardArea
@@ -353,8 +329,8 @@ export const DashboardDream: React.FC = () => {
                   : item.shape || (isPhoto ? 'rectangle' : 'none');
 
               const canChangeShape = isPhoto || isSticker;
-              const showTextTab = !isPhoto; // у фото нет вкладки «Текст»
-              const showBgTab = !isPhoto; // у фото нет фона
+              const showTextTab = !isPhoto;
+              const showBgTab = !isPhoto;
               const isFreeForm = shape === 'none';
               const isShaped = shape !== 'none' && shape !== 'rectangle';
 
@@ -404,289 +380,134 @@ export const DashboardDream: React.FC = () => {
                     </S.DeleteBtn>
                   </S.CardActions>
 
-                  <div
+                  <S.ResizeHandle
                     className="resize-handle"
                     onMouseDown={e => handleResizeStart(item.id, e)}
-                    style={{
-                      position: 'absolute',
-                      right: 2,
-                      bottom: 2,
-                      width: 14,
-                      height: 14,
-                      cursor: 'nwse-resize',
-                      background:
-                        'linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.25) 50%)',
-                      borderRadius: 2,
-                      zIndex: 5,
-                    }}
                     title="Изменить размер"
                   />
 
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: currentBgColor,
-                      clipPath: isShaped ? shapeClipPath(shape) : undefined,
-                      borderRadius: shape === 'rectangle' ? 12 : isFreeForm ? 8 : 0,
-                      border: isFreeForm
-                        ? '1px dashed rgba(36, 40, 65, 0.18)'
-                        : shape === 'rectangle'
-                          ? '1px solid rgba(36, 40, 65, 0.07)'
-                          : 'none',
-                      boxShadow:
-                        !isShaped && shape === 'rectangle'
-                          ? '0 8px 24px rgba(35, 39, 65, 0.10)'
-                          : 'none',
-                      overflow: 'hidden',
-                      padding: isPhoto ? 0 : isShaped ? '36px 28px 20px' : '28px 14px 14px',
-                      boxSizing: 'border-box',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
+                  <S.CardSurface
+                    $bgColor={currentBgColor}
+                    $shape={shape}
+                    $isShaped={isShaped}
+                    $isFreeForm={isFreeForm}
+                    $isPhoto={isPhoto}
                   >
+                    {isPhoto && (
+                      <S.PhotoContainer $bgColor={currentBgColor || '#EFEFEF'}>
+                        {item.content ? (
+                          <S.PhotoImage src={item.content} alt="" draggable={false} />
+                        ) : (
+                          <S.PhotoPlaceholder>Фото</S.PhotoPlaceholder>
+                        )}
+                      </S.PhotoContainer>
+                    )}
 
+                    {(isText || isSticker) && (
+                      <S.TextContentWrap>
+                        {isSticker && item.title != null && (
+                          <S.StickerTitle
+                            contentEditable
+                            suppressContentEditableWarning
+                            onBlur={e =>
+                              updateItemProperty(item.id, 'title', e.currentTarget.textContent || '')
+                            }
+                            $color={currentTextColor}
+                          >
+                            {item.title}
+                          </S.StickerTitle>
+                        )}
+                        <S.EditableText
+                          contentEditable
+                          suppressContentEditableWarning
+                          onBlur={e =>
+                            updateItemProperty(item.id, 'content', e.currentTarget.textContent || '')
+                          }
+                          $color={currentTextColor}
+                          $isText={isText}
+                        >
+                          {item.content}
+                        </S.EditableText>
+                      </S.TextContentWrap>
+                    )}
 
-                  {isPhoto && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        overflow: 'hidden',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: currentBgColor || '#EFEFEF',
-                      }}
-                    >
-                      {item.content ? (
-                        <img
-                          src={item.content}
-                          alt=""
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            display: 'block',
-                          }}
-                          draggable={false}
-                        />
-                      ) : (
-                        <span style={{ color: '#999', fontSize: 13 }}>Фото</span>
-                      )}
-                    </div>
-                  )}
-
-                  {(isText || isSticker) && (
-                    <div
-                      style={{
-                        padding: '4px 2px',
-                        height: '100%',
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      {isSticker && item.title != null && (
-                        <div
+                    {isLink && (
+                      <S.LinkContentWrap>
+                        <S.LinkTitle
                           contentEditable
                           suppressContentEditableWarning
                           onBlur={e =>
                             updateItemProperty(item.id, 'title', e.currentTarget.textContent || '')
                           }
-                          style={{
-                            fontWeight: 600,
-                            fontSize: 13,
-                            color: currentTextColor,
-                            marginBottom: 6,
-                            outline: 'none',
-                            opacity: 0.85,
-                          }}
+                          $color={currentTextColor}
                         >
-                          {item.title}
-                        </div>
-                      )}
-                      <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={e =>
-                          updateItemProperty(item.id, 'content', e.currentTarget.textContent || '')
-                        }
-                        style={{
-                          flex: 1,
-                          fontSize: isText ? 16 : 14,
-                          lineHeight: 1.45,
-                          color: currentTextColor,
-                          outline: 'none',
-                          wordBreak: 'break-word',
-                          overflow: 'auto',
-                        }}
-                      >
-                        {item.content}
-                      </div>
-                    </div>
-                  )}
-
-                  {isLink && (
-                    <div
-                      style={{
-                        padding: '4px 2px',
-                        height: '100%',
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 6,
-                        position: 'relative',
-                        zIndex: 1,
-                      }}
-                    >
-                      <div
-                        contentEditable
-                        suppressContentEditableWarning
-                        onBlur={e =>
-                          updateItemProperty(item.id, 'title', e.currentTarget.textContent || '')
-                        }
-                        style={{
-                          fontWeight: 600,
-                          fontSize: 14,
-                          color: currentTextColor,
-                          outline: 'none',
-                        }}
-                      >
-                        {item.title || 'Ссылка'}
-                      </div>
-                      <input
-                        type="url"
-                        value={item.content}
-                        onChange={e => updateItemProperty(item.id, 'content', e.target.value)}
-                        onMouseDown={e => e.stopPropagation()}
-                        placeholder="https://example.com"
-                        style={{
-                          width: '100%',
-                          boxSizing: 'border-box',
-                          border: '1px solid rgba(0,0,0,0.12)',
-                          borderRadius: 6,
-                          padding: '6px 8px',
-                          fontSize: 12,
-                          color: '#5B7CFA',
-                          background: 'rgba(255,255,255,0.7)',
-                          outline: 'none',
-                        }}
-                      />
-                      {item.content && item.content !== 'https://' && (
-                        <a
-                          href={
-                            item.content.startsWith('http')
-                              ? item.content
-                              : `https://${item.content}`
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            fontSize: 11,
-                            color: '#5B7CFA',
-                            wordBreak: 'break-all',
-                            textDecoration: 'underline',
-                          }}
-                          onClick={e => e.stopPropagation()}
+                          {item.title || 'Ссылка'}
+                        </S.LinkTitle>
+                        <S.LinkInput
+                          type="url"
+                          value={item.content}
+                          onChange={e => updateItemProperty(item.id, 'content', e.target.value)}
                           onMouseDown={e => e.stopPropagation()}
-                        >
-                          Открыть →
-                        </a>
-                      )}
-                    </div>
-                  )}
-
-                  </div>
+                          placeholder="https://example.com"
+                        />
+                        {item.content && item.content !== 'https://' && (
+                          <S.LinkOpen
+                            href={
+                              item.content.startsWith('http')
+                                ? item.content
+                                : `https://${item.content}`
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => e.stopPropagation()}
+                            onMouseDown={e => e.stopPropagation()}
+                          >
+                            Открыть →
+                          </S.LinkOpen>
+                        )}
+                      </S.LinkContentWrap>
+                    )}
+                  </S.CardSurface>
 
                   {activeSettingsId === item.id && (
-                    <div
+                    <S.SettingsMenu
                       className="settings-menu"
                       onClick={e => e.stopPropagation()}
-                      style={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        marginTop: 6,
-                        width: 220,
-                        background: '#fff',
-                        borderRadius: 10,
-                        boxShadow: '0 8px 28px rgba(0,0,0,0.15)',
-                        padding: 12,
-                        zIndex: 50,
-                        border: '1px solid rgba(0,0,0,0.06)',
-                      }}
                     >
-                      <div style={{ display: 'flex', gap: 4, marginBottom: 10 }}>
+                      <S.SettingsTabs>
                         {showTextTab && (
-                          <button
+                          <S.SettingsTabBtn
                             type="button"
                             onClick={() => setActiveTab('color')}
-                            style={{
-                              flex: 1,
-                              padding: '5px 0',
-                              fontSize: 11,
-                              border: 'none',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              background: activeTab === 'color' ? '#34312D' : '#f0f0f0',
-                              color: activeTab === 'color' ? '#fff' : '#333',
-                            }}
+                            $active={activeTab === 'color'}
                           >
                             Текст
-                          </button>
+                          </S.SettingsTabBtn>
                         )}
                         {showBgTab && (
-                          <button
+                          <S.SettingsTabBtn
                             type="button"
                             onClick={() => setActiveTab('bgColor')}
-                            style={{
-                              flex: 1,
-                              padding: '5px 0',
-                              fontSize: 11,
-                              border: 'none',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              background: activeTab === 'bgColor' ? '#34312D' : '#f0f0f0',
-                              color: activeTab === 'bgColor' ? '#fff' : '#333',
-                            }}
+                            $active={activeTab === 'bgColor'}
                           >
                             Фон
-                          </button>
+                          </S.SettingsTabBtn>
                         )}
                         {canChangeShape && (
-                          <button
+                          <S.SettingsTabBtn
                             type="button"
                             onClick={() => setActiveTab('shape')}
-                            style={{
-                              flex: 1,
-                              padding: '5px 0',
-                              fontSize: 11,
-                              border: 'none',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              background: activeTab === 'shape' ? '#34312D' : '#f0f0f0',
-                              color: activeTab === 'shape' ? '#fff' : '#333',
-                            }}
+                            $active={activeTab === 'shape'}
                           >
                             Форма
-                          </button>
+                          </S.SettingsTabBtn>
                         )}
-                      </div>
+                      </S.SettingsTabs>
 
                       {(activeTab === 'color' || activeTab === 'bgColor') && (
-                        <div
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(5, 1fr)',
-                            gap: 6,
-                          }}
-                        >
+                        <S.ColorGrid>
                           {COLOR_PRESETS.map(c => (
-                            <button
+                            <S.ColorSwatch
                               key={c}
                               type="button"
                               title={c}
@@ -697,70 +518,40 @@ export const DashboardDream: React.FC = () => {
                                   c,
                                 )
                               }
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 6,
-                                background: c,
-                                border:
-                                  (activeTab === 'color' ? currentTextColor : currentBgColor) === c
-                                    ? '2px solid #34312D'
-                                    : '1px solid rgba(0,0,0,0.12)',
-                                cursor: 'pointer',
-                                padding: 0,
-                              }}
+                              $color={c}
+                              $selected={
+                                (activeTab === 'color' ? currentTextColor : currentBgColor) === c
+                              }
                             />
                           ))}
                           {activeTab === 'bgColor' && (isText || isSticker) && (
-                            <button
+                            <S.TransparentSwatch
                               type="button"
                               title="Прозрачный"
                               onClick={() => updateItemProperty(item.id, 'color', 'transparent')}
-                              style={{
-                                width: 28,
-                                height: 28,
-                                borderRadius: 6,
-                                background:
-                                  'repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 12px 12px',
-                                border:
-                                  currentBgColor === 'transparent'
-                                    ? '2px solid #34312D'
-                                    : '1px solid rgba(0,0,0,0.12)',
-                                cursor: 'pointer',
-                                padding: 0,
-                              }}
+                              $selected={currentBgColor === 'transparent'}
                             />
                           )}
-                        </div>
+                        </S.ColorGrid>
                       )}
 
                       {activeTab === 'shape' && canChangeShape && (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <S.ShapeList>
                           {SHAPE_OPTIONS.map(s => (
-                            <button
+                            <S.ShapeOptionBtn
                               key={s}
                               type="button"
                               onClick={() => updateItemProperty(item.id, 'shape', s)}
-                              style={{
-                                textAlign: 'left',
-                                padding: '6px 8px',
-                                fontSize: 12,
-                                border: 'none',
-                                borderRadius: 6,
-                                cursor: 'pointer',
-                                background:
-                                  (item.shape || (isPhoto ? 'rectangle' : 'none')) === s
-                                    ? '#EDE8FA'
-                                    : 'transparent',
-                                color: '#34312D',
-                              }}
+                              $selected={
+                                (item.shape || (isPhoto ? 'rectangle' : 'none')) === s
+                              }
                             >
                               {renderShapeLabel(s)}
-                            </button>
+                            </S.ShapeOptionBtn>
                           ))}
-                        </div>
+                        </S.ShapeList>
                       )}
-                    </div>
+                    </S.SettingsMenu>
                   )}
                 </S.DraggableCard>
               );
@@ -788,7 +579,7 @@ export const DashboardDream: React.FC = () => {
             <span style={{ fontSize: 16 }}>🔗</span> Ссылка
           </S.SideBtn>
         </S.SidePanel>
-      </div>
+      </S.MainContent>
     </S.DashboardContainer>
   );
 };
