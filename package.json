@@ -1,6 +1,6 @@
 {
     "name": "dot",
-    "version": "0.0.0",
+    "version": "0.2.0",
     "description": "",
     "main": "./src/index.tsx",
     "scripts": {
@@ -26,15 +26,17 @@
     },
     "homepage": "https://github.com/Ya227/dot#readme",
     "dependencies": {
-        "@brojs/cli": "^2.0.0",
+        "@brojs/cli": "^2.0.1",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
+        "@reduxjs/toolkit": "^2.14.0",
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
         "express": "^4.22.3",
         "framer-motion": "^14.6.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
+        "react-redux": "^9.3.1",
         "react-router-dom": "^6.30.6"
     },
     "devDependencies": {
