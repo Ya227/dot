@@ -42,6 +42,37 @@ export const WeeklyWidget = styled.div`
   border: 1px solid var(--border);
 `;
 
+interface ProgressCircleProps {
+  $progressDeg: number;
+}
+
+export const ProgressCircle = styled.div<ProgressCircleProps>`
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  transition: background 0.35s ease;
+  
+  background: conic-gradient(
+    var(--purple, #7C3AED) ${(props) => props.$progressDeg}deg,
+    var(--lavender, #EDE9FE) ${(props) => props.$progressDeg}deg
+  );
+`;
+
+export const ProgressInner = styled.div`
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: var(--surface, #fff);
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--purple-dark, #5B21B6);
+`;
+
 export const WeeklyWidgetInfo = styled.div``;
 
 export const WeeklyWidgetCounter = styled.p`

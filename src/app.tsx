@@ -11,6 +11,7 @@ import Landing from "./pages/landing/LandingPage";
 import RegisterPage from "./pages/registration/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import ProfilePage from "./pages/profile/ProfilePage";
+import AboutDream from "./pages/aboutDream";
 
 export const App = () => {
   return (
@@ -25,6 +26,7 @@ export const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dreamform" element={<FormDreams />} />
+        <Route path="/aboutDream" element={<AboutDream />} />
       </Routes>
     </BrowserRouter>
   );

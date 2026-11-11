@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import * as S from "./dreamCard.styles";
 
@@ -21,8 +22,13 @@ export const DreamCard: React.FC<DreamCardProps> = ({
   statusVariant = "on-track",
   onContinueChat,
 }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate("/aboutDream");
+  };
   return (
-    <S.CardContainer>
+    <S.CardContainer onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <S.ImageWrapper>
         <S.CardImage src={imageSrc} alt={title} />
         {statusText && (

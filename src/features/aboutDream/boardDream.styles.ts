@@ -370,3 +370,241 @@ export const SideUploadLabel = styled.label`
     display: none;
   }
 `;
+
+export const MainContent = styled.div`
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+`;
+
+export const BoardToplineControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+export const ResizeHandle = styled.div`
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.25) 50%);
+  border-radius: 2px;
+  z-index: 5;
+`;
+
+const shapeClipPathCss = (shape: ShapeType): string => {
+  switch (shape) {
+    case 'circle':
+      return 'circle(50% at 50% 50%)';
+    case 'triangle':
+      return 'polygon(50% 0%, 0% 100%, 100% 100%)';
+    case 'star':
+      return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+    case 'pentagon':
+      return 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
+    default:
+      return 'none';
+  }
+};
+
+export const CardSurface = styled.div<{
+  $bgColor: string;
+  $shape: ShapeType;
+  $isShaped: boolean;
+  $isFreeForm: boolean;
+  $isPhoto: boolean;
+}>`
+  position: absolute;
+  inset: 0;
+  background: ${(p) => p.$bgColor};
+  clip-path: ${(p) => (p.$isShaped ? shapeClipPathCss(p.$shape) : undefined)};
+  border-radius: ${(p) =>
+    p.$shape === 'rectangle' ? '12px' : p.$isFreeForm ? '8px' : '0'};
+  border: ${(p) =>
+    p.$isFreeForm
+      ? '1px dashed rgba(36, 40, 65, 0.18)'
+      : p.$shape === 'rectangle'
+        ? '1px solid rgba(36, 40, 65, 0.07)'
+        : 'none'};
+  box-shadow: ${(p) =>
+    !p.$isShaped && p.$shape === 'rectangle'
+      ? '0 8px 24px rgba(35, 39, 65, 0.10)'
+      : 'none'};
+  overflow: hidden;
+  padding: ${(p) =>
+    p.$isPhoto ? '0' : p.$isShaped ? '36px 28px 20px' : '28px 14px 14px'};
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const PhotoContainer = styled.div<{ $bgColor: string }>`
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${(p) => p.$bgColor || '#EFEFEF'};
+`;
+
+export const PhotoImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+
+export const PhotoPlaceholder = styled.span`
+  color: #999;
+  font-size: 13px;
+`;
+
+export const TextContentWrap = styled.div`
+  padding: 4px 2px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+`;
+
+export const StickerTitle = styled.div<{ $color: string }>`
+  font-weight: 600;
+  font-size: 13px;
+  color: ${(p) => p.$color};
+  margin-bottom: 6px;
+  outline: none;
+  opacity: 0.85;
+`;
+
+export const EditableText = styled.div<{ $color: string; $isText?: boolean }>`
+  flex: 1;
+  font-size: ${(p) => (p.$isText ? '16px' : '14px')};
+  line-height: 1.45;
+  color: ${(p) => p.$color};
+  outline: none;
+  word-break: break-word;
+  overflow: auto;
+`;
+
+export const LinkContentWrap = styled.div`
+  padding: 4px 2px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+`;
+
+export const LinkTitle = styled.div<{ $color: string }>`
+  font-weight: 600;
+  font-size: 14px;
+  color: ${(p) => p.$color};
+  outline: none;
+`;
+
+export const LinkInput = styled.input`
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #5b7cfa;
+  background: rgba(255, 255, 255, 0.7);
+  outline: none;
+`;
+
+export const LinkOpen = styled.a`
+  font-size: 11px;
+  color: #5b7cfa;
+  word-break: break-all;
+  text-decoration: underline;
+`;
+
+export const SettingsMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  width: 220px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  z-index: 50;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+`;
+
+export const SettingsTabs = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+`;
+
+export const SettingsTabBtn = styled.button<{ $active: boolean }>`
+  flex: 1;
+  padding: 5px 0;
+  font-size: 11px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: ${(p) => (p.$active ? '#34312D' : '#f0f0f0')};
+  color: ${(p) => (p.$active ? '#fff' : '#333')};
+`;
+
+export const ColorGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+`;
+
+export const ColorSwatch = styled.button<{ $color: string; $selected: boolean }>`
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: ${(p) => p.$color};
+  border: ${(p) =>
+    p.$selected ? '2px solid #34312D' : '1px solid rgba(0, 0, 0, 0.12)'};
+  cursor: pointer;
+  padding: 0;
+`;
+
+export const TransparentSwatch = styled.button<{ $selected: boolean }>`
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 12px 12px;
+  border: ${(p) =>
+    p.$selected ? '2px solid #34312D' : '1px solid rgba(0, 0, 0, 0.12)'};
+  cursor: pointer;
+  padding: 0;
+`;
+
+export const ShapeList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+export const ShapeOptionBtn = styled.button<{ $selected: boolean }>`
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: ${(p) => (p.$selected ? '#EDE8FA' : 'transparent')};
+  color: #34312d;
+`;
