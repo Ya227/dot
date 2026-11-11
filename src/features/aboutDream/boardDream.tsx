@@ -1,4 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
+
 import * as S from './boardDream.styles';
 
 export type ShapeType = 'rectangle' | 'circle' | 'triangle' | 'star' | 'pentagon' | 'none';

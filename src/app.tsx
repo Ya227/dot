@@ -3,15 +3,15 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Navbar from "./features/navbar";
+import AboutDream from "./pages/aboutDream";
 import Dashboard from "./pages/dashboard";
 import FormDreams from "./pages/dreamform";
 import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
 import Landing from "./pages/landing/LandingPage";
-import RegisterPage from "./pages/registration/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import ProfilePage from "./pages/profile/ProfilePage";
-import AboutDream from "./pages/aboutDream";
+import RegisterPage from "./pages/registration/RegisterPage";
 
 export const App = () => {
   return (
