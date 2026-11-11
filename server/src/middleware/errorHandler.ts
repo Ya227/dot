@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 /**
  * Кастомный класс ошибки с HTTP-статусом.
@@ -21,8 +21,7 @@ export class AppError extends Error {
 const errorHandler = (
   err: Error | AppError,
   _req: Request,
-  res: Response,
-  _next: NextFunction
+  res: Response
 ): void => {
   // Если это наша кастомная ошибка — используем её статус
   if (err instanceof AppError) {
