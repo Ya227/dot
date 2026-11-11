@@ -26,7 +26,7 @@
     },
     "homepage": "https://github.com/Ya227/dot#readme",
     "dependencies": {
-        "@brojs/cli": "^2.0.0",
+        "@brojs/cli": "^2.0.1",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
         "@reduxjs/toolkit": "^2.14.0",
