@@ -42,7 +42,7 @@ export const Landing = () => {
                                 неожиданным жизненным обстоятельствам и вместе с вами радуется каждому сделанному шагу.
                             </p>
                             <S.HeroActions>
-                                <S.PrimaryButton onClick={() => navigate("/dashboard")}>
+                                <S.PrimaryButton onClick={() => navigate("/registration")}>
                                     Создайте свою первую мечту
                                 </S.PrimaryButton>
                                 <S.WatchLink
@@ -90,7 +90,7 @@ export const Landing = () => {
                     </div>
                     <h2>Ваша мечта не должна ждать.</h2>
                     <p>Сделайте первый маленький шаг сегодня. Dot поможет вам с остальным.</p>
-                    <S.PrimaryButton onClick={() => navigate("/dashboard")}>
+                    <S.PrimaryButton onClick={() => navigate("/registration")}>
                         Начните мечтать бесплатно <ArrowRightIcon />
                     </S.PrimaryButton>
                 </S.Container>
