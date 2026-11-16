@@ -29,9 +29,6 @@ export const Navbar = () => {
                         <S.NavLink isActive={location.pathname === "/dashboard"} onClick={() => navigate("/dashboard")}>
                             Дашборд
                         </S.NavLink>
-                        <S.NavLink isActive={location.pathname === "/dreams"} onClick={() => navigate("/dreams")}>
-                            Мои мечты
-                        </S.NavLink>
                         <S.NavLink isActive={location.pathname === "/habits"} onClick={() => navigate("/habits")}>
                             Привычки
                         </S.NavLink>

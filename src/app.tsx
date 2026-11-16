@@ -6,7 +6,6 @@ import Navbar from "./features/navbar";
 import AboutDream from "./pages/aboutDream";
 import Dashboard from "./pages/dashboard";
 import FormDreams from "./pages/dreamform";
-import Dreams from "./pages/dreams";
 import Habits from "./pages/habits";
 import Landing from "./pages/landing/LandingPage";
 import LoginPage from "./pages/login/LoginPage";
@@ -33,7 +32,6 @@ export const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dreams" element={<Dreams />} />
           <Route path="/habits" element={<Habits />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/dreamform" element={<FormDreams />} />
