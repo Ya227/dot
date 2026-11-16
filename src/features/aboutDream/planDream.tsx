@@ -73,7 +73,7 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
     <S.PlanSection>
       <S.PlanSectionHeader>
         <div>
-          <S.PlanSectionSubtitle>Your Plan</S.PlanSectionSubtitle>
+          <S.PlanSectionSubtitle>Ваш план</S.PlanSectionSubtitle>
           <S.PlanSectionTitle>This week</S.PlanSectionTitle>
         </div>
 
@@ -91,7 +91,7 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
             <S.WeeklyWidgetCounter>
               {completedCount} of {totalCount}
             </S.WeeklyWidgetCounter>
-            <S.WeeklyWidgetLabel>steps complete</S.WeeklyWidgetLabel>
+            <S.WeeklyWidgetLabel>шагов</S.WeeklyWidgetLabel>
           </S.WeeklyWidgetInfo>
         </S.WeeklyWidget>
       </S.PlanSectionHeader>
@@ -134,7 +134,7 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
                     >
                       {step.title}
                     </S.StepCardTitle>
-                    {step.movedByAi && <S.AiTag>✨ Moved by AI</S.AiTag>}
+                    {step.movedByAi && <S.AiTag>✨ Использовать Ии</S.AiTag>}
                   </S.StepCardTitleRow>
                   <S.StepCardMeta>
                     {step.duration} • <S.StepCardCategory>{step.category}</S.StepCardCategory>
@@ -147,7 +147,7 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
       </S.StepsContainer>
 
       <S.PlanSectionFooter>
-        <span>✨ Your plan adapted to your energy level</span>
+        <span>✨ План в вашем темпе</span>
       </S.PlanSectionFooter>
     </S.PlanSection>
   );

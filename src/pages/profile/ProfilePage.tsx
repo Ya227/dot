@@ -26,32 +26,32 @@ export const ProfilePage = () => {
     <S.PageWrapper>
       <S.Container>
         <S.PageHeader>
-          <span>YOUR SPACE</span>
-          <h1>Profile & settings</h1>
-          <p>Make DotDream feel like your own.</p>
+          <span>ЛИЧНОЕ ПРОСТРАНСТВО</span>
+          <h1>Профиль и настройки</h1>
+          <p>Сделайте DotDream по-настоящему своим.</p>
         </S.PageHeader>
 
         <S.ContentGrid>
           {/* ЛЕВАЯ КОЛОНКА - ПРОФИЛЬ */}
           <S.ProfileCard>
             <S.AvatarWrapper>
-              <div className="avatar">AN</div>
+              <div className="avatar">АН</div>
               <div className="edit-icon">
                 <CameraIcon />
               </div>
             </S.AvatarWrapper>
 
-            <S.ProfileName>Anna Nguyen</S.ProfileName>
+            <S.ProfileName>Анна Нгуен</S.ProfileName>
             <S.ProfileEmail>anna.nguyen@example.com</S.ProfileEmail>
-            <S.ChangePhotoBtn>Change photo</S.ChangePhotoBtn>
+            <S.ChangePhotoBtn>Изменить фото</S.ChangePhotoBtn>
 
             <S.Divider />
 
             <S.DreamingSince>
               <SparklesIcon />
               <div>
-                <strong>Dreaming since March 2025</strong>
-                2 dreams · 12 day streak
+                <strong>Мечтает с марта 2025</strong>
+                2 мечты · 12 дней подряд
               </div>
             </S.DreamingSince>
           </S.ProfileCard>
@@ -63,50 +63,50 @@ export const ProfilePage = () => {
                 active={activeTab === 'settings'} 
                 onClick={() => setActiveTab('settings')}
               >
-                Settings
+                Настройки
               </S.Tab>
               <S.Tab 
                 active={activeTab === 'subscription'} 
                 onClick={() => setActiveTab('subscription')}
               >
-                Subscription
+                Подписка
               </S.Tab>
             </S.Tabs>
 
-            {/* Секция Personal details */}
+            {/* Секция Личные данные */}
             <S.Section>
-              <h3>Personal details</h3>
-              <p>Update how your name and email appear.</p>
+              <h3>Личные данные</h3>
+              <p>Обновите, как отображаются ваше имя и почта.</p>
 
               <S.FormRow>
                 <S.InputGroup>
-                  <label>Full name</label>
-                  <input type="text" defaultValue="Anna Nguyen" />
+                  <label>Полное имя</label>
+                  <input type="text" defaultValue="Анна Нгуен" />
                 </S.InputGroup>
                 <S.InputGroup>
-                  <label>Email address</label>
+                  <label>Электронная почта</label>
                   <input type="email" defaultValue="anna.nguyen@example.com" />
                 </S.InputGroup>
               </S.FormRow>
 
               <S.InputGroup>
-                <label>Password</label>
+                <label>Пароль</label>
                 <S.PasswordInputWrapper>
                   <input type="text" defaultValue="••••••••••••••••" readOnly style={{ letterSpacing: '2px' }} />
-                  <button className="change-link">Change password</button>
+                  <button className="change-link">Изменить пароль</button>
                 </S.PasswordInputWrapper>
               </S.InputGroup>
             </S.Section>
 
-            {/* Секция Notifications */}
+            {/* Секция Уведомления */}
             <S.Section style={{ borderBottom: 'none' }}>
-              <h3>Notifications</h3>
-              <p>Choose which gentle nudges you'd like to receive.</p>
+              <h3>Уведомления</h3>
+              <p>Выберите, какие напоминания вы хотите получать.</p>
 
               <S.NotificationRow>
                 <div>
-                  <h4>Daily check-ins</h4>
-                  <p>A short reminder about today's plan.</p>
+                  <h4>Ежедневные отметки</h4>
+                  <p>Короткое напоминание о плане на сегодня.</p>
                 </div>
                 <S.ToggleSwitch>
                   <input 
@@ -120,8 +120,8 @@ export const ProfilePage = () => {
 
               <S.NotificationRow>
                 <div>
-                  <h4>Weekly reflection</h4>
-                  <p>A Sunday summary of your progress.</p>
+                  <h4>Еженедельный итог</h4>
+                  <p>Воскресный обзор вашего прогресса.</p>
                 </div>
                 <S.ToggleSwitch>
                   <input 
@@ -135,8 +135,8 @@ export const ProfilePage = () => {
 
               <S.NotificationRow>
                 <div>
-                  <h4>Plan adjustments</h4>
-                  <p>When Dot notices your plan could feel better.</p>
+                  <h4>Корректировка плана</h4>
+                  <p>Когда Dot замечает, что план можно улучшить.</p>
                 </div>
                 <S.ToggleSwitch>
                   <input 
@@ -150,7 +150,7 @@ export const ProfilePage = () => {
             </S.Section>
 
             <S.Footer>
-              <S.SaveButton>Save changes</S.SaveButton>
+              <S.SaveButton>Сохранить изменения</S.SaveButton>
             </S.Footer>
           </S.SettingsCard>
 

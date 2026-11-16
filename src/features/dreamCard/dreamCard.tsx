@@ -9,8 +9,6 @@ export interface DreamCardProps {
   title: string;
   progress: number;
   targetDate: string;
-  statusText?: string;
-  statusVariant?: "on-track" | "warning";
   onContinueChat?: () => void;
 }
 
@@ -19,8 +17,6 @@ export const DreamCard: React.FC<DreamCardProps> = ({
   title,
   progress,
   targetDate,
-  statusText = "On track",
-  statusVariant = "on-track",
   onContinueChat,
 }) => {
   const navigate = useNavigate();
@@ -32,9 +28,6 @@ export const DreamCard: React.FC<DreamCardProps> = ({
     <S.CardContainer onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <S.ImageWrapper>
         <S.CardImage src={imageSrc} alt={title} />
-        {statusText && (
-          <S.Badge variant={statusVariant}>{statusText}</S.Badge>
-        )}
       </S.ImageWrapper>
 
       <S.CardContent>

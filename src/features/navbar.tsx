@@ -17,10 +17,10 @@ export const Navbar = () => {
                 </S.LogoLink>
                 {isLandingPage ? (
                     <S.NavActions>
-                        <S.AuthButton variant="secondary" onClick={() => navigate("/registration")}>
+                        <S.AuthButton variant="secondary" onClick={() => navigate("/login")}>
                             Войти
                         </S.AuthButton>
-                        <S.AuthButton variant="primary" onClick={() => navigate("/dashboard")}>
+                        <S.AuthButton variant="primary" onClick={() => navigate("/registration")}>
                             Начать бесплатно
                         </S.AuthButton>
                     </S.NavActions>
@@ -28,9 +28,6 @@ export const Navbar = () => {
                     <S.NavActions>
                         <S.NavLink isActive={location.pathname === "/dashboard"} onClick={() => navigate("/dashboard")}>
                             Дашборд
-                        </S.NavLink>
-                        <S.NavLink isActive={location.pathname === "/dreams"} onClick={() => navigate("/dreams")}>
-                            Мои мечты
                         </S.NavLink>
                         <S.NavLink isActive={location.pathname === "/habits"} onClick={() => navigate("/habits")}>
                             Привычки
