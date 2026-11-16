@@ -51,8 +51,6 @@ function Dashboard() {
                             title="Хочу открыть котокафе"
                             progress={51}
                             targetDate="Июль 28, 2025"
-                            statusText="Активно"
-                            statusVariant="on-track"
                             onContinueChat={() => navigate('/dreams')}
                         />
                     </CardsGrid>
