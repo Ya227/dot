@@ -4,10 +4,10 @@ import * as S from './aboutDream.styles';
 import { DashboardDream } from '../features/aboutDream/boardDream';
 import { PlanDream } from '../features/aboutDream/planDream';
 
-type TabType = 'PLAN' | 'BOARD' | 'RESOURCES' | 'CHAT';
+type TabType = 'План' | 'Доска' | 'Ресурсы' | 'Чат';
 
 export const AboutDream: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('PLAN');
+  const [activeTab, setActiveTab] = useState<TabType>('План');
   const [progressPercentage, setProgressPercentage] = useState<number>(40);
 
   return (
@@ -15,7 +15,7 @@ export const AboutDream: React.FC = () => {
       <S.DreamHeader>
         <S.DreamHeaderContainer>
           <S.DreamHeaderInfo>
-            <S.DreamHeaderSubtitle>Your Dream</S.DreamHeaderSubtitle>
+            <S.DreamHeaderSubtitle>Ваша мечта</S.DreamHeaderSubtitle>
             <S.DreamHeaderTitle>Speak Spanish with confidence</S.DreamHeaderTitle>
           </S.DreamHeaderInfo>
 
@@ -25,14 +25,14 @@ export const AboutDream: React.FC = () => {
             </S.DreamHeaderBarBg>
             <S.DreamHeaderProgressText>
               <S.DreamHeaderPercentage>{progressPercentage}%</S.DreamHeaderPercentage>
-              <S.DreamHeaderLabel>Overall Progress</S.DreamHeaderLabel>
+              <S.DreamHeaderLabel>Общий прогресс</S.DreamHeaderLabel>
             </S.DreamHeaderProgressText>
           </S.DreamHeaderProgressBlock>
         </S.DreamHeaderContainer>
 
         <S.DreamHeaderNavWrapper>
           <S.DreamTabs>
-            {(['PLAN', 'BOARD', 'RESOURCES', 'CHAT'] as const).map(tab => (
+            {(['План', 'Доска', 'Ресурсы', 'Чат'] as const).map(tab => (
               <S.DreamTabsBtn
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -46,11 +46,11 @@ export const AboutDream: React.FC = () => {
       </S.DreamHeader>
 
       <S.DreamContent>
-        {activeTab === 'PLAN' && (
+        {activeTab === 'План' && (
           <PlanDream onProgressChange={setProgressPercentage} />
         )}
 
-        {activeTab === 'BOARD' && (
+        {activeTab === 'Доска' && (
           <div
             style={{
               width: '100%',
@@ -65,11 +65,11 @@ export const AboutDream: React.FC = () => {
           </div>
         )}
 
-        {activeTab !== 'PLAN' && activeTab !== 'BOARD' && (
+        {activeTab !== 'План' && activeTab !== 'Доска' && (
           <S.BlankTab>
             <S.BlankTabTitle>{activeTab} Section</S.BlankTabTitle>
             <S.BlankTabText>
-              This view is currently empty. Core logic will be attached later.
+              Страница пока не готова :(())
             </S.BlankTabText>
           </S.BlankTab>
         )}

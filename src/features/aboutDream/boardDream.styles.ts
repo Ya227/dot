@@ -42,7 +42,7 @@ export const PageHeader = styled.header`
 export const Eyebrow = styled.div`
   margin-bottom: 6px;
   color: ${palette.accent};
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.16em;
 `;
@@ -61,65 +61,6 @@ export const PageSubtitle = styled.p`
   color: ${palette.muted};
   font-size: 13px;
   line-height: 1.5;
-`;
-
-export const HeaderMeta = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  padding: 9px 14px;
-  border: 1px solid ${palette.line};
-  border-radius: 999px;
-  background: ${palette.surface};
-  color: #626779;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-`;
-
-export const StatusDot = styled.span`
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #39b980;
-  box-shadow: 0 0 0 3px #e7f8f0;
-`;
-
-export const CalendarSelector = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  label {
-    margin-right: 3px;
-    color: ${palette.muted};
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-  }
-  select,
-  input {
-    height: 36px;
-    box-sizing: border-box;
-    border: 1px solid ${palette.line};
-    border-radius: 9px;
-    background: #fff;
-    color: ${palette.ink};
-    padding: 0 11px;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 650;
-    outline: none;
-    &:focus {
-      border-color: ${palette.accent};
-      box-shadow: 0 0 0 3px rgba(101, 88, 211, 0.1);
-    }
-  }
-  select {
-    max-width: 145px;
-  }
-  input[type='number'] {
-    width: 82px;
-  }
 `;
 
 export const BoardFrame = styled.section`
@@ -146,28 +87,10 @@ export const BoardTopline = styled.div`
   flex-shrink: 0;
 `;
 
-export const BoardHeading = styled.h2`
-  margin: 0;
-  color: ${palette.ink};
-  font-size: 15px;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-`;
-
 export const BoardHint = styled.p`
   margin: 4px 0 0;
   color: ${palette.muted};
-  font-size: 11px;
-`;
-
-export const ItemCounter = styled.span`
-  padding: 7px 10px;
-  border-radius: 8px;
-  background: #f5f6fa;
-  color: #73788a;
-  font-size: 11px;
-  font-weight: 650;
-  white-space: nowrap;
+  font-size: 15px;
 `;
 
 export const BoardArea = styled.div`
@@ -179,23 +102,6 @@ export const BoardArea = styled.div`
   background-color: #fbfbfe;
   background-image: radial-gradient(#dde0eb 1px, transparent 1px);
   background-size: 22px 22px;
-`;
-
-export const YearBadge = styled.div`
-  position: sticky;
-  top: 18px;
-  left: 100%;
-  width: max-content;
-  margin: 18px 20px 0 auto;
-  z-index: 1;
-  pointer-events: none;
-  color: #a0a3b1;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.13em;
-  span {
-    color: #c0c2cd;
-  }
 `;
 
 export const DraggableCard = styled.div<{
@@ -378,12 +284,6 @@ export const MainContent = styled.div`
   width: 100%;
   flex: 1;
   min-height: 0;
-`;
-
-export const BoardToplineControls = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
 `;
 
 export const ResizeHandle = styled.div`

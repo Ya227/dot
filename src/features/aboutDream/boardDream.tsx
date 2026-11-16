@@ -6,7 +6,7 @@ export type ShapeType = 'rectangle' | 'circle' | 'triangle' | 'star' | 'pentagon
 
 export interface BoardItem {
   id: string;
-  type: 'photo' | 'text' | 'sticker' | 'link';
+  type: 'photo' | 'sticker' | 'link';
   content: string;
   title?: string;
   x: number;
@@ -17,11 +17,6 @@ export interface BoardItem {
   textColor?: string;
   shape?: ShapeType;
 }
-
-const MONTHS = [
-  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
-];
 
 const createId = () =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -37,9 +32,6 @@ const COLOR_PRESETS = [
 ];
 
 export const DashboardDream: React.FC = () => {
-  const now = new Date();
-  const [selectedMonth, setSelectedMonth] = useState(MONTHS[now.getMonth()]);
-  const [selectedYear, setSelectedYear] = useState(now.getFullYear());
   const [activeSettingsId, setActiveSettingsId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'color' | 'bgColor' | 'shape'>('color');
   const [items, setItems] = useState<BoardItem[]>([
@@ -69,7 +61,7 @@ export const DashboardDream: React.FC = () => {
     },
     {
       id: 'i3',
-      type: 'text',
+      type: 'sticker',
       content: 'Open sketchbook on a warm desk',
       x: 105,
       y: 340,
@@ -103,7 +95,6 @@ export const DashboardDream: React.FC = () => {
   const addItem = (type: BoardItem['type']) => {
     const defaults: Record<BoardItem['type'], { content: string; title?: string; color?: string }> = {
       photo: { content: '', color: '#EFEFEF' },
-      text: { content: 'Ваш текст...', color: 'transparent' },
       sticker: {
         content: 'Добавьте свою мысль...',
         title: 'Новая заметка',
@@ -124,7 +115,7 @@ export const DashboardDream: React.FC = () => {
       width: type === 'photo' ? 280 : 250,
       height: type === 'sticker' ? 190 : 165,
       textColor: '#34312D',
-      shape: type === 'text' || type === 'link' ? 'none' : type === 'photo' ? 'rectangle' : 'none',
+      shape: type === 'link' ? 'none' : type === 'photo' ? 'rectangle' : 'none',
     };
 
     setItems(prev => [...prev, newItem]);
@@ -249,59 +240,22 @@ export const DashboardDream: React.FC = () => {
     <S.DashboardContainer>
       <S.PageHeader>
         <div>
-          <S.Eyebrow>YOUR PERSONAL SPACE</S.Eyebrow>
-          <S.PageTitle>Dream board</S.PageTitle>
+          <S.Eyebrow>Ваше пространство для мотивации</S.Eyebrow>
+          <S.PageTitle>Доска мечты</S.PageTitle>
           <S.PageSubtitle>
             Собирайте идеи, сохраняйте вдохновение и создавайте планы.
           </S.PageSubtitle>
         </div>
-        <S.HeaderMeta>
-          <S.StatusDot />
-          Ваше пространство
-        </S.HeaderMeta>
       </S.PageHeader>
 
       <S.MainContent>
         <S.BoardFrame>
           <S.BoardTopline>
             <div>
-              <S.BoardHeading>Моя доска</S.BoardHeading>
               <S.BoardHint>
-                Перетаскивайте карточки и меняйте их размеры по своему желанию
+                Создавайте и меняйте карточки по своему желанию
               </S.BoardHint>
             </div>
-            <S.BoardToplineControls>
-              <S.CalendarSelector>
-                <label htmlFor="dream-month">ПЕРИОД</label>
-                <select
-                  id="dream-month"
-                  value={selectedMonth}
-                  onChange={e => setSelectedMonth(e.target.value)}
-                >
-                  {MONTHS.map(month => (
-                    <option key={month} value={month}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  aria-label="Год"
-                  type="number"
-                  value={selectedYear}
-                  onChange={e => {
-                    const value = Number(e.target.value);
-                    if (Number.isInteger(value) && value >= 2000 && value <= 2100) {
-                      setSelectedYear(value);
-                    }
-                  }}
-                  min="2000"
-                  max="2100"
-                />
-              </S.CalendarSelector>
-              <S.ItemCounter>
-                {items.length} {items.length === 1 ? 'элемент' : 'элементов'}
-              </S.ItemCounter>
-            </S.BoardToplineControls>
           </S.BoardTopline>
 
           <S.BoardArea
@@ -311,21 +265,15 @@ export const DashboardDream: React.FC = () => {
             onMouseLeave={handleMouseUp}
             onClick={() => setActiveSettingsId(null)}
           >
-            <S.YearBadge>
-              {selectedMonth} <span>{selectedYear}</span>
-            </S.YearBadge>
 
             {items.map(item => {
               const currentTextColor = item.textColor || '#34312D';
               const currentBgColor = item.color || 'transparent';
-              const isText = item.type === 'text';
               const isSticker = item.type === 'sticker';
               const isPhoto = item.type === 'photo';
               const isLink = item.type === 'link';
 
-              const shape: ShapeType = isText
-                ? 'none'
-                : isLink
+              const shape: ShapeType = isLink
                   ? 'rectangle'
                   : item.shape || (isPhoto ? 'rectangle' : 'none');
 
@@ -404,7 +352,7 @@ export const DashboardDream: React.FC = () => {
                       </S.PhotoContainer>
                     )}
 
-                    {(isText || isSticker) && (
+                    {(isSticker) && (
                       <S.TextContentWrap>
                         {isSticker && item.title != null && (
                           <S.StickerTitle
@@ -425,7 +373,6 @@ export const DashboardDream: React.FC = () => {
                             updateItemProperty(item.id, 'content', e.currentTarget.textContent || '')
                           }
                           $color={currentTextColor}
-                          $isText={isText}
                         >
                           {item.content}
                         </S.EditableText>
@@ -525,7 +472,7 @@ export const DashboardDream: React.FC = () => {
                               }
                             />
                           ))}
-                          {activeTab === 'bgColor' && (isText || isSticker) && (
+                          {activeTab === 'bgColor' && (isSticker) && (
                             <S.TransparentSwatch
                               type="button"
                               title="Прозрачный"
@@ -563,12 +510,8 @@ export const DashboardDream: React.FC = () => {
         <S.SidePanel>
           <S.SidePanelTitle>Добавить</S.SidePanelTitle>
 
-          <S.SideBtn type="button" onClick={() => addItem('text')}>
-            <span style={{ fontSize: 16 }}>Aa</span> Текст
-          </S.SideBtn>
-
           <S.SideBtn type="button" onClick={() => addItem('sticker')}>
-            <span style={{ fontSize: 16 }}>📌</span> Заметка
+            <span style={{ fontSize: 16 }}>Aa</span> Заметка
           </S.SideBtn>
 
           <S.SideUploadLabel>
