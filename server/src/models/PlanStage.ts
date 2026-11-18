@@ -1,4 +1,5 @@
 import pool from "./database";
+import { IPlanTask } from "./PlanTask";
 
 export interface IPlanStage {
   id: string;
@@ -9,6 +10,7 @@ export interface IPlanStage {
   progress: number;
   created_at: Date;
   updated_at: Date;
+  tasks?: IPlanTask[];
 }
 
 export class PlanStageModel {
@@ -39,5 +41,25 @@ export class PlanStageModel {
       WHERE id = $3;
     `;
     await pool.query(query, [progress, status, id]);
+  }
+
+  static async updateById(id: string, data: Partial<IPlanStage>): Promise<IPlanStage | undefined> {
+    const query = `
+      UPDATE plan_stages
+      SET title = COALESCE($1, title), status = COALESCE($2, status), 
+          progress = COALESCE($3, progress), updated_at = CURRENT_TIMESTAMP
+      WHERE id = $4
+      RETURNING *;
+    `;
+    const result = await pool.query(query, [data.title, data.status, data.progress, id]);
+    return result.rows[0];
+  }
+
+  static async deleteById(id: string): Promise<void> {
+    const query = `
+      DELETE FROM plan_stages 
+      WHERE id = $1;
+    `;
+    await pool.query(query, [id]);
   }
 }

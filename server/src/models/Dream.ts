@@ -58,4 +58,29 @@ export class DreamModel {
     `;
     await pool.query(query, [progress, id]);
   }
+
+  static async updateById(id: string, data: Partial<IDream>): Promise<IDream | undefined> {
+    const query = `
+      UPDATE dreams
+      SET title = $1, description = $2, target_date = $3,
+        dream_status = $4, plan_status = $5, progress = $6,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $7
+      RETURNING *;
+    `;
+    const result = await pool.query(query, [
+      data.title,
+      data.description,
+      data.target_date,
+      data.dream_status,
+      data.plan_status,
+      data.progress,
+      id,
+    ]);
+    return result.rows[0];
+  }
+
+  static async deleteById(id: string): Promise<void> {
+    await pool.query("DELETE FROM dreams WHERE id = $1;", [id]);
+  }
 }

@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Кастомный класс ошибки с HTTP-статусом.
@@ -18,7 +18,12 @@ export class AppError extends Error {
  * Глобальный middleware обработки ошибок.
  * Должен быть подключён ПОСЛЕ всех маршрутов.
  */
-const errorHandler = (err: Error | AppError, _req: Request, res: Response): void => {
+const errorHandler = (
+  err: Error | AppError,
+  _req: Request,
+  res: Response,
+  _next: NextFunction,
+): void => {
   // Если это наша кастомная ошибка — используем её статус
   if (err instanceof AppError) {
     res.status(err.statusCode).json({

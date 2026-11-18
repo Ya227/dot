@@ -17,16 +17,24 @@ export class PlanTaskModel {
   static async create(
     stageId: string,
     title: string,
+    description: string | null,
     taskOrder: number,
-    deadline?: Date,
+    deadline?: Date | string,
     isAiGenerated: boolean = false,
   ): Promise<IPlanTask> {
     const query = `
-      INSERT INTO plan_tasks (stage_id, title, task_order, deadline, is_ai_generated)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO plan_tasks (stage_id, title, description, task_order, deadline, is_ai_generated)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const result = await pool.query(query, [stageId, title, taskOrder, deadline, isAiGenerated]);
+    const result = await pool.query(query, [
+      stageId,
+      title,
+      description,
+      taskOrder,
+      deadline,
+      isAiGenerated,
+    ]);
     return result.rows[0];
   }
 
@@ -47,5 +55,13 @@ export class PlanTaskModel {
       WHERE id = $2;
     `;
     await pool.query(query, [isCompleted, id]);
+  }
+
+  static async deleteById(id: string): Promise<void> {
+    const query = `
+      DELETE FROM plan_tasks 
+      WHERE id = $1;
+    `;
+    await pool.query(query, [id]);
   }
 }
