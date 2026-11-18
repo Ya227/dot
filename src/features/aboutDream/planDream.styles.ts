@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const PlanSection = styled.div`
   background: var(--page);
@@ -54,10 +54,10 @@ export const ProgressCircle = styled.div<ProgressCircleProps>`
   display: grid;
   place-items: center;
   transition: background 0.35s ease;
-  
+
   background: conic-gradient(
-    var(--purple, #7C3AED) ${(props) => props.$progressDeg}deg,
-    var(--lavender, #EDE9FE) ${(props) => props.$progressDeg}deg
+    var(--purple, #7c3aed) ${(props) => props.$progressDeg}deg,
+    var(--lavender, #ede9fe) ${(props) => props.$progressDeg}deg
   );
 `;
 
@@ -70,7 +70,7 @@ export const ProgressInner = styled.div`
   place-items: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--purple-dark, #5B21B6);
+  color: var(--purple-dark, #5b21b6);
 `;
 
 export const WeeklyWidgetInfo = styled.div``;
@@ -110,7 +110,7 @@ export const StepCardTitle = styled.h4`
 `;
 
 interface StepCardProps {
-  status?: 'completed' | 'in_progress' | 'pending';
+  status?: "completed" | "in_progress" | "pending";
 }
 
 export const StepCard = styled.div<StepCardProps>`
@@ -129,12 +129,16 @@ export const StepCard = styled.div<StepCardProps>`
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.04);
   }
 
-  ${(props) => props.status === 'in_progress' && `
+  ${(props) =>
+    props.status === "in_progress" &&
+    `
     border-color: var(--purple);
     background: var(--surface);
   `}
 
-  ${(props) => props.status === 'completed' && `
+  ${(props) =>
+    props.status === "completed" &&
+    `
     background: var(--surface);
     opacity: 0.75;
     
@@ -170,7 +174,7 @@ export const StepCardStatusWrapper = styled.div`
 `;
 
 interface BadgeProps {
-  variant: 'completed' | 'progress' | 'pending';
+  variant: "completed" | "progress" | "pending";
 }
 
 export const StatusBadge = styled.div<BadgeProps>`
@@ -181,18 +185,24 @@ export const StatusBadge = styled.div<BadgeProps>`
   align-items: center;
   justify-content: center;
 
-  ${(props) => props.variant === 'completed' && `
+  ${(props) =>
+    props.variant === "completed" &&
+    `
     background: var(--purple-dark);
     color: var(--page);
     font-size: 0.75rem;
     font-weight: bold;
   `}
 
-  ${(props) => props.variant === 'progress' && `
+  ${(props) =>
+    props.variant === "progress" &&
+    `
     border: 2px solid var(--purple);
   `}
 
-  ${(props) => props.variant === 'pending' && `
+  ${(props) =>
+    props.variant === "pending" &&
+    `
     border: 2px solid var(--border);
     background: var(--page);
   `}

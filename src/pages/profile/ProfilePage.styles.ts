@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const PageWrapper = styled.div`
   background: #f8f9fb;
   min-height: 100vh;
   padding: 60px 24px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   color: var(--ink);
 `;
 
@@ -176,14 +176,14 @@ export const Tab = styled.button<{ active?: boolean }>`
   margin-right: 32px;
   font-size: 15px;
   font-weight: 600;
-  color: ${({ active }) => (active ? 'var(--purple)' : 'var(--body)')};
+  color: ${({ active }) => (active ? "var(--purple)" : "var(--body)")};
   cursor: pointer;
   position: relative;
   font-family: inherit;
   transition: color 0.2s;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     bottom: -1px;
     left: 0;
@@ -339,7 +339,7 @@ export const ToggleSwitch = styled.label`
     right: 0;
     bottom: 0;
     background-color: #e5e7eb;
-    transition: .4s;
+    transition: 0.4s;
     border-radius: 34px;
 
     &:before {
@@ -350,9 +350,9 @@ export const ToggleSwitch = styled.label`
       left: 3px;
       bottom: 3px;
       background-color: white;
-      transition: .4s;
+      transition: 0.4s;
       border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
 `;

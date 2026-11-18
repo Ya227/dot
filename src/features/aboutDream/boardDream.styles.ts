@@ -1,15 +1,15 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
-export type ShapeType = 'rectangle' | 'circle' | 'triangle' | 'star' | 'pentagon' | 'none';
+export type ShapeType = "rectangle" | "circle" | "triangle" | "star" | "pentagon" | "none";
 
 const palette = {
-  page: 'var(--page)',
-  surface: 'var(--surface)',
-  ink: 'var(--ink)',
-  muted: 'var(--muted)',
-  line: 'var(--border)',
-  accent: 'var(--purple)',
-  accentSoft: 'var(--lavender)',
+  page: "var(--page)",
+  surface: "var(--surface)",
+  ink: "var(--ink)",
+  muted: "var(--muted)",
+  line: "var(--border)",
+  accent: "var(--purple)",
+  accentSoft: "var(--lavender)",
 };
 
 export const DashboardContainer = styled.div`
@@ -24,7 +24,14 @@ export const DashboardContainer = styled.div`
   gap: 16px;
   color: ${palette.ink};
   background: ${palette.page};
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 `;
 
 export const PageHeader = styled.header`
@@ -113,58 +120,53 @@ export const DraggableCard = styled.div<{
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding: ${(p) => (p.shape === 'none' ? '28px 14px 14px' : '38px 20px 20px')};
+  padding: ${(p) => (p.shape === "none" ? "28px 14px 14px" : "38px 20px 20px")};
   border: ${(p) =>
-    p.shape === 'none'
-      ? '1px dashed rgba(36, 40, 65, 0.18)'
-      : '1px solid rgba(36, 40, 65, 0.07)'};
-  border-radius: ${(p) =>
-    p.shape === 'rectangle' || p.shape === 'none' ? '12px' : '0'};
-  background: ${(p) =>
-    p.bgColor || (p.shape === 'none' ? 'transparent' : '#FFFFFF')};
+    p.shape === "none" ? "1px dashed rgba(36, 40, 65, 0.18)" : "1px solid rgba(36, 40, 65, 0.07)"};
+  border-radius: ${(p) => (p.shape === "rectangle" || p.shape === "none" ? "12px" : "0")};
+  background: ${(p) => p.bgColor || (p.shape === "none" ? "transparent" : "#FFFFFF")};
   box-shadow: ${(p) =>
-    p.shape === 'rectangle'
-      ? '0 8px 24px rgba(35, 39, 65, 0.10), 0 2px 5px rgba(35, 39, 65, 0.04)'
-      : 'none'};
+    p.shape === "rectangle"
+      ? "0 8px 24px rgba(35, 39, 65, 0.10), 0 2px 5px rgba(35, 39, 65, 0.04)"
+      : "none"};
   z-index: 2;
   transition: box-shadow 0.18s ease;
   &:hover {
     box-shadow: ${(p) =>
-      p.shape === 'rectangle'
-        ? '0 13px 32px rgba(35, 39, 65, 0.14), 0 3px 8px rgba(35, 39, 65, 0.05)'
-        : 'none'};
+      p.shape === "rectangle"
+        ? "0 13px 32px rgba(35, 39, 65, 0.14), 0 3px 8px rgba(35, 39, 65, 0.05)"
+        : "none"};
   }
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: ${(p) => p.bgColor || '#FFFFFF'};
+    background: ${(p) => p.bgColor || "#FFFFFF"};
     clip-path: ${(p) => {
       switch (p.shape) {
-        case 'circle':
-          return 'circle(50% at 50% 50%)';
-        case 'triangle':
-          return 'polygon(50% 0%, 0% 100%, 100% 100%)';
-        case 'star':
-          return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-        case 'pentagon':
-          return 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
+        case "circle":
+          return "circle(50% at 50% 50%)";
+        case "triangle":
+          return "polygon(50% 0%, 0% 100%, 100% 100%)";
+        case "star":
+          return "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+        case "pentagon":
+          return "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)";
         default:
-          return 'none';
+          return "none";
       }
     }};
-    display: ${(p) =>
-      p.shape === 'none' || p.shape === 'rectangle' ? 'none' : 'block'};
+    display: ${(p) => (p.shape === "none" || p.shape === "rectangle" ? "none" : "block")};
   }
   ${(p) =>
-    p.shape !== 'rectangle' && p.shape !== 'none'
+    p.shape !== "rectangle" && p.shape !== "none"
       ? `
     padding: 48px 34px 30px;
     border: 0;
     filter: drop-shadow(0 5px 8px rgba(35, 39, 65, 0.13));
   `
-      : ''}
+      : ""}
 `;
 
 export const CardActions = styled.div`
@@ -246,7 +248,9 @@ export const SideBtn = styled.button`
   font-weight: 600;
   color: ${palette.ink};
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   &:hover {
     border-color: #d7d1ff;
     background: ${palette.accentSoft};
@@ -266,7 +270,9 @@ export const SideUploadLabel = styled.label`
   font-size: 13px;
   font-weight: 600;
   color: ${palette.ink};
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
   &:hover {
     border-color: #d7d1ff;
     background: ${palette.accentSoft};
@@ -300,16 +306,16 @@ export const ResizeHandle = styled.div`
 
 const shapeClipPathCss = (shape: ShapeType): string => {
   switch (shape) {
-    case 'circle':
-      return 'circle(50% at 50% 50%)';
-    case 'triangle':
-      return 'polygon(50% 0%, 0% 100%, 100% 100%)';
-    case 'star':
-      return 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
-    case 'pentagon':
-      return 'polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)';
+    case "circle":
+      return "circle(50% at 50% 50%)";
+    case "triangle":
+      return "polygon(50% 0%, 0% 100%, 100% 100%)";
+    case "star":
+      return "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+    case "pentagon":
+      return "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)";
     default:
-      return 'none';
+      return "none";
   }
 };
 
@@ -324,21 +330,17 @@ export const CardSurface = styled.div<{
   inset: 0;
   background: ${(p) => p.$bgColor};
   clip-path: ${(p) => (p.$isShaped ? shapeClipPathCss(p.$shape) : undefined)};
-  border-radius: ${(p) =>
-    p.$shape === 'rectangle' ? '12px' : p.$isFreeForm ? '8px' : '0'};
+  border-radius: ${(p) => (p.$shape === "rectangle" ? "12px" : p.$isFreeForm ? "8px" : "0")};
   border: ${(p) =>
     p.$isFreeForm
-      ? '1px dashed rgba(36, 40, 65, 0.18)'
-      : p.$shape === 'rectangle'
-        ? '1px solid rgba(36, 40, 65, 0.07)'
-        : 'none'};
+      ? "1px dashed rgba(36, 40, 65, 0.18)"
+      : p.$shape === "rectangle"
+        ? "1px solid rgba(36, 40, 65, 0.07)"
+        : "none"};
   box-shadow: ${(p) =>
-    !p.$isShaped && p.$shape === 'rectangle'
-      ? '0 8px 24px rgba(35, 39, 65, 0.10)'
-      : 'none'};
+    !p.$isShaped && p.$shape === "rectangle" ? "0 8px 24px rgba(35, 39, 65, 0.10)" : "none"};
   overflow: hidden;
-  padding: ${(p) =>
-    p.$isPhoto ? '0' : p.$isShaped ? '36px 28px 20px' : '28px 14px 14px'};
+  padding: ${(p) => (p.$isPhoto ? "0" : p.$isShaped ? "36px 28px 20px" : "28px 14px 14px")};
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -351,7 +353,7 @@ export const PhotoContainer = styled.div<{ $bgColor: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${(p) => p.$bgColor || '#EFEFEF'};
+  background: ${(p) => p.$bgColor || "#EFEFEF"};
 `;
 
 export const PhotoImage = styled.img`
@@ -388,7 +390,7 @@ export const StickerTitle = styled.div<{ $color: string }>`
 
 export const EditableText = styled.div<{ $color: string; $isText?: boolean }>`
   flex: 1;
-  font-size: ${(p) => (p.$isText ? '16px' : '14px')};
+  font-size: ${(p) => (p.$isText ? "16px" : "14px")};
   line-height: 1.45;
   color: ${(p) => p.$color};
   outline: none;
@@ -460,8 +462,8 @@ export const SettingsTabBtn = styled.button<{ $active: boolean }>`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: ${(p) => (p.$active ? '#34312D' : '#f0f0f0')};
-  color: ${(p) => (p.$active ? '#fff' : '#333')};
+  background: ${(p) => (p.$active ? "#34312D" : "#f0f0f0")};
+  color: ${(p) => (p.$active ? "#fff" : "#333")};
 `;
 
 export const ColorGrid = styled.div`
@@ -475,8 +477,7 @@ export const ColorSwatch = styled.button<{ $color: string; $selected: boolean }>
   height: 28px;
   border-radius: 6px;
   background: ${(p) => p.$color};
-  border: ${(p) =>
-    p.$selected ? '2px solid #34312D' : '1px solid rgba(0, 0, 0, 0.12)'};
+  border: ${(p) => (p.$selected ? "2px solid #34312D" : "1px solid rgba(0, 0, 0, 0.12)")};
   cursor: pointer;
   padding: 0;
 `;
@@ -486,8 +487,7 @@ export const TransparentSwatch = styled.button<{ $selected: boolean }>`
   height: 28px;
   border-radius: 6px;
   background: repeating-conic-gradient(#ccc 0% 25%, #fff 0% 50%) 50% / 12px 12px;
-  border: ${(p) =>
-    p.$selected ? '2px solid #34312D' : '1px solid rgba(0, 0, 0, 0.12)'};
+  border: ${(p) => (p.$selected ? "2px solid #34312D" : "1px solid rgba(0, 0, 0, 0.12)")};
   cursor: pointer;
   padding: 0;
 `;
@@ -505,6 +505,6 @@ export const ShapeOptionBtn = styled.button<{ $selected: boolean }>`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background: ${(p) => (p.$selected ? '#EDE8FA' : 'transparent')};
+  background: ${(p) => (p.$selected ? "#EDE8FA" : "transparent")};
   color: #34312d;
 `;

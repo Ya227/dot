@@ -51,9 +51,7 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
         </S.Description>
       </S.TextContent>
 
-      <S.NewDreamButton onClick={onNewDreamClick}>
-        + Новая мечта
-      </S.NewDreamButton>
+      <S.NewDreamButton onClick={onNewDreamClick}>+ Новая мечта</S.NewDreamButton>
     </S.BannerContainer>
   );
 };

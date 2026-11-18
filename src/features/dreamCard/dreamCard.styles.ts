@@ -7,7 +7,9 @@ export const CardContainer = styled.article`
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -41,8 +43,7 @@ export const Badge = styled.span<{ variant?: "on-track" | "warning" }>`
   font-size: 11px;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  color: ${(props) =>
-    props.variant === "warning" ? "#d97706" : "var(--success)"};
+  color: ${(props) => (props.variant === "warning" ? "#d97706" : "var(--success)")};
 
   &::before {
     content: "";
@@ -67,7 +68,7 @@ export const Title = styled.h3`
   color: var(--ink);
   margin-bottom: 20px;
   line-height: 1.3;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const ProgressSection = styled.div`

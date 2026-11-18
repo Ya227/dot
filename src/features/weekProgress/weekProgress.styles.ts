@@ -24,7 +24,7 @@ export const Title = styled.h4`
   font-weight: 700;
   color: var(--ink);
   margin: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const DateRange = styled.span`

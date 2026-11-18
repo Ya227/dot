@@ -39,7 +39,7 @@ export const Subtitle = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--warning);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const Title = styled.h4`
@@ -47,7 +47,7 @@ export const Title = styled.h4`
   font-weight: 700;
   color: var(--ink);
   margin: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const Description = styled.p`

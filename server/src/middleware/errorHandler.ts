@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 
 /**
  * Кастомный класс ошибки с HTTP-статусом.
@@ -10,7 +10,7 @@ export class AppError extends Error {
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
-    this.name = 'AppError';
+    this.name = "AppError";
   }
 }
 
@@ -18,11 +18,7 @@ export class AppError extends Error {
  * Глобальный middleware обработки ошибок.
  * Должен быть подключён ПОСЛЕ всех маршрутов.
  */
-const errorHandler = (
-  err: Error | AppError,
-  _req: Request,
-  res: Response
-): void => {
+const errorHandler = (err: Error | AppError, _req: Request, res: Response): void => {
   // Если это наша кастомная ошибка — используем её статус
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
@@ -33,11 +29,11 @@ const errorHandler = (
   }
 
   // Для неизвестных ошибок — 500 (внутренняя ошибка сервера)
-  console.error('Необработанная ошибка:', err);
+  console.error("Необработанная ошибка:", err);
 
   res.status(500).json({
     success: false,
-    message: 'Внутренняя ошибка сервера',
+    message: "Внутренняя ошибка сервера",
   });
 };
 

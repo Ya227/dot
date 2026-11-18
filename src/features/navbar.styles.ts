@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 
 export const NavbarContainer = styled.header`
-  background: rgba(255, 255, 255, .92);
-  border-bottom: 1px solid #E5E7EB;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #e5e7eb;
   height: 72px;
   position: sticky;
   top: 0;
@@ -23,14 +23,14 @@ export const NavInner = styled.div`
 export const LogoLink = styled.a`
   font-size: 24px;
   font-weight: 700;
-  color: #5B21B6;
+  color: #5b21b6;
   text-decoration: none;
   display: flex;
   align-items: center;
   cursor: pointer;
-  
+
   .dot {
-    color: #7C3AED;
+    color: #7c3aed;
     font-size: 32px;
     line-height: 0;
     margin: 0 2px;
@@ -45,7 +45,7 @@ export const NavActions = styled.nav`
 
 export const NavLink = styled.a<{ isActive?: boolean }>`
   text-decoration: none;
-  color: ${props => props.isActive ? '#7C3AED' : '#4B5563'};
+  color: ${(props) => (props.isActive ? "#7C3AED" : "#4B5563")};
   font-weight: 500;
   font-size: 15px;
   padding: 8px 12px;
@@ -54,17 +54,19 @@ export const NavLink = styled.a<{ isActive?: boolean }>`
   cursor: pointer;
 
   &:hover {
-    color: #7C3AED;
-    background-color: #F3F4F6;
+    color: #7c3aed;
+    background-color: #f3f4f6;
   }
-  
-  ${props => props.isActive && `
+
+  ${(props) =>
+    props.isActive &&
+    `
     background-color: #EDE9FE;
     font-weight: 600;
   `}
 `;
 
-export const AuthButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
+export const AuthButton = styled.button<{ variant?: "primary" | "secondary" }>`
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 600;
@@ -73,11 +75,14 @@ export const AuthButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
   border: none;
   transition: all 0.2s;
 
-  ${props => props.variant === 'primary' ? `
+  ${(props) =>
+    props.variant === "primary"
+      ? `
     background-color: #7C3AED;
     color: white;
     &:hover { background-color: #6D28D9; }
-  ` : `
+  `
+      : `
     background: transparent;
     color: #7C3AED;
     &:hover { background-color: #EDE9FE; }
@@ -88,16 +93,16 @@ export const ProfileAvatar = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #EDE9FE;
-  border: 2px solid #7C3AED;
+  background-color: #ede9fe;
+  border: 2px solid #7c3aed;
   cursor: pointer;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7C3AED;
+  color: #7c3aed;
   font-weight: 600;
-  
+
   img {
     width: 100%;
     height: 100%;

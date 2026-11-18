@@ -9,7 +9,7 @@ export const MockupContainer = styled.div`
   max-width: 540px;
   overflow: hidden;
   transform: rotate(1deg); /* Легкий наклон как в дизайне */
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 `;
 
 export const MockupHead = styled.div`
@@ -38,21 +38,21 @@ export const HeadInfo = styled.div`
   flex: 1;
   flex-direction: column;
   gap: 3px;
-  
+
   strong {
     color: #1f2937;
     font-size: 13px;
   }
-  
+
   span {
     color: #6b7280;
     font-size: 11px;
     display: flex;
     align-items: center;
     gap: 6px;
-    
+
     &::before {
-      content: '';
+      content: "";
       background: #10b981;
       border-radius: 50%;
       display: inline-block;
@@ -86,12 +86,10 @@ export const Bubble = styled.div<{ isUser?: boolean }>`
   line-height: 1.55;
   max-width: 82%;
   padding: 13px 16px;
-  align-self: ${props => props.isUser ? 'flex-end' : 'flex-start'};
-  background: ${props => props.isUser ? '#7c3aed' : '#f3f4f6'};
-  color: ${props => props.isUser ? 'white' : '#1f2937'};
-  border-radius: ${props => props.isUser 
-    ? '16px 16px 4px 16px' 
-    : '16px 16px 16px 4px'};
+  align-self: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
+  background: ${(props) => (props.isUser ? "#7c3aed" : "#f3f4f6")};
+  color: ${(props) => (props.isUser ? "white" : "#1f2937")};
+  border-radius: ${(props) => (props.isUser ? "16px 16px 4px 16px" : "16px 16px 16px 4px")};
 `;
 
 export const MiniPlan = styled.div`
@@ -100,7 +98,7 @@ export const MiniPlan = styled.div`
   border-radius: 10px;
   margin-top: 13px;
   padding: 13px;
-  
+
   strong {
     font-size: 12px;
     color: #1f2937;
@@ -116,16 +114,18 @@ export const PlanItem = styled.p`
   gap: 7px;
   margin-top: 9px;
   color: #4b5563;
-  
-  &:first-of-type { margin-top: 0; }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
 `;
 
 export const StatusDot = styled.i<{ checked?: boolean }>`
   align-items: center;
-  border: 1px solid ${props => props.checked ? '#10b981' : '#c4b5fd'};
+  border: 1px solid ${(props) => (props.checked ? "#10b981" : "#c4b5fd")};
   border-radius: 50%;
-  color: ${props => props.checked ? 'white' : '#7c3aed'};
-  background: ${props => props.checked ? '#10b981' : 'transparent'};
+  color: ${(props) => (props.checked ? "white" : "#7c3aed")};
+  background: ${(props) => (props.checked ? "#10b981" : "transparent")};
   display: flex;
   font-size: 9px;
   font-style: normal;
@@ -144,7 +144,7 @@ export const MockupInput = styled.div`
   justify-content: space-between;
   padding: 14px 18px;
   background: white;
-  
+
   button {
     align-items: center;
     background: #7c3aed;
@@ -157,7 +157,9 @@ export const MockupInput = styled.div`
     width: 34px;
     cursor: pointer;
     transition: background 0.2s;
-    
-    &:hover { background: #6d28d9; }
+
+    &:hover {
+      background: #6d28d9;
+    }
   }
 `;

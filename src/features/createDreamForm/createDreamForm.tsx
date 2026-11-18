@@ -47,7 +47,7 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -86,11 +86,7 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
         <S.FormGroup>
           <S.Label>Обложка мечты</S.Label>
           <S.ImageUploadBox hasPreview={!!imagePreviewUrl}>
-            <S.HiddenFileInput
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
+            <S.HiddenFileInput type="file" accept="image/*" onChange={handleFileChange} />
             {imagePreviewUrl ? (
               <S.ImagePreview src={imagePreviewUrl} alt="Preview" />
             ) : (
