@@ -1,37 +1,37 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from "react";
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
-import * as S from './LoginPage.styles';
+import * as S from "./LoginPage.styles";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError('');
+    if (error) setError("");
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.email.trim() || !formData.password) {
-      setError('Пожалуйста, заполните все поля');
+      setError("Пожалуйста, заполните все поля");
       return;
     }
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      setError('Введите корректный email');
+      setError("Введите корректный email");
       return;
     }
 
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -46,7 +46,10 @@ export const LoginPage = () => {
 
         {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        >
           <S.InputGroup>
             <label htmlFor="email">Email</label>
             <input
@@ -71,9 +74,7 @@ export const LoginPage = () => {
             />
           </S.InputGroup>
 
-          <S.SubmitButton type="submit">
-            Войти
-          </S.SubmitButton>
+          <S.SubmitButton type="submit">Войти</S.SubmitButton>
         </form>
 
         <S.FooterText>

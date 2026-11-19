@@ -1,0 +1,65 @@
+### 1. Создание новой привычки
+POST http://localhost:3001/api/habits
+Content-Type: application/json
+
+{
+  "title": "Пить воду",
+  "description": "Выпивать 2 литра в день",
+  "frequency": "daily"
+}
+
+### 2. Получение списка всех привычек
+GET http://localhost:3001/api/habits
+
+### 3. Обновление привычки 
+# ВАЖНО: замени 'ВСТАВЬ_СЮДА_ID' на реальный id, который вернется в ответе на запрос №1
+PUT http://localhost:3001/api/habits/0c788927-ce0d-459e-8881-73da6751d28c
+Content-Type: application/json
+
+{
+  "title": "Пить 3 литра воды",
+  "is_active": true
+}
+
+### 4. Удаление привычки
+# ВАЖНО: замени 'ВСТАВЬ_СЮДА_ID' на реальный id
+DELETE http://localhost:3001/api/habits/0c788927-ce0d-459e-8881-73da6751d28c
+
+### Получить список мечт (чтобы узнать ID)
+GET http://localhost:3001/api/dreams
+
+### Получить детальную информацию о мечте с планом
+GET http://localhost:3001/api/dreams/6450cba9-5137-4ae6-b570-4ae46494e8e1
+
+### Создать новый этап в мечте
+POST http://localhost:3001/api/dreams/6450cba9-5137-4ae6-b570-4ae46494e8e1/stages
+Content-Type: application/json
+
+{
+  "title": "Бронирование и виза",
+  "stage_order": 2
+}
+
+### Создать задачу в этапе
+### Подставь stage_id из ответа на предыдущий запрос
+POST http://localhost:3001/api/stages/1b22e748-92f2-458d-b4a9-b724dd9a0877/tasks
+Content-Type: application/json
+
+{
+  "title": "Забронировать отель в Киото",
+  "task_order": 1,
+  "deadline": "2027-01-15",
+  "is_ai_generated": true
+}
+
+### Отметить задачу выполненной (чекбокс)
+### Подставь task_id из ответа на предыдущий запрос
+PATCH http://localhost:3001/api/tasks/8472490f-1866-42fa-8319-aa8082621536
+Content-Type: application/json
+
+{
+  "is_completed": true
+}
+
+### Удалить задачу
+DELETE http://localhost:3001/api/tasks/8472490f-1866-42fa-8319-aa8082621536

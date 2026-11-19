@@ -61,9 +61,7 @@ export const DreamCard: React.FC<DreamCardProps> = ({
             <span>{targetDate}</span>
           </S.DateWrapper>
 
-          <S.ChatButton onClick={onContinueChat}>
-            Продолжить чат
-          </S.ChatButton>
+          <S.ChatButton onClick={onContinueChat}>Продолжить чат</S.ChatButton>
         </S.CardFooter>
       </S.CardContent>
     </S.CardContainer>

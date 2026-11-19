@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import * as S from './aboutDream.styles';
-import { DashboardDream } from '../features/aboutDream/boardDream';
-import { PlanDream } from '../features/aboutDream/planDream';
+import * as S from "./aboutDream.styles";
+import { DashboardDream } from "../features/aboutDream/boardDream";
+import { PlanDream } from "../features/aboutDream/planDream";
 
-type TabType = 'План' | 'Доска' | 'Ресурсы' | 'Чат';
+type TabType = "План" | "Доска" | "Ресурсы" | "Чат";
 
 export const AboutDream: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('План');
+  const [activeTab, setActiveTab] = useState<TabType>("План");
   const [progressPercentage, setProgressPercentage] = useState<number>(40);
 
   return (
@@ -32,7 +32,7 @@ export const AboutDream: React.FC = () => {
 
         <S.DreamHeaderNavWrapper>
           <S.DreamTabs>
-            {(['План', 'Доска', 'Ресурсы', 'Чат'] as const).map(tab => (
+            {(["План", "Доска", "Ресурсы", "Чат"] as const).map((tab) => (
               <S.DreamTabsBtn
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -46,31 +46,27 @@ export const AboutDream: React.FC = () => {
       </S.DreamHeader>
 
       <S.DreamContent>
-        {activeTab === 'План' && (
-          <PlanDream onProgressChange={setProgressPercentage} />
-        )}
+        {activeTab === "План" && <PlanDream onProgressChange={setProgressPercentage} />}
 
-        {activeTab === 'Доска' && (
+        {activeTab === "Доска" && (
           <div
             style={{
-              width: '100%',
-              maxWidth: 'none',
+              width: "100%",
+              maxWidth: "none",
               flex: 1,
               minHeight: 0,
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <DashboardDream />
           </div>
         )}
 
-        {activeTab !== 'План' && activeTab !== 'Доска' && (
+        {activeTab !== "План" && activeTab !== "Доска" && (
           <S.BlankTab>
             <S.BlankTabTitle>{activeTab} Section</S.BlankTabTitle>
-            <S.BlankTabText>
-              Страница пока не готова :(())
-            </S.BlankTabText>
+            <S.BlankTabText>Страница пока не готова :(())</S.BlankTabText>
           </S.BlankTab>
         )}
       </S.DreamContent>

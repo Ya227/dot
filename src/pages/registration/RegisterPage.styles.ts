@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const PageWrapper = styled.div`
   background: linear-gradient(180deg, #ede9fe 0%, #f8f6ff 56%, #fff 100%);
@@ -56,7 +56,7 @@ export const Header = styled.div`
   margin-bottom: 8px;
 
   h1 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 32px;
     font-weight: 700;
     color: var(--violet);

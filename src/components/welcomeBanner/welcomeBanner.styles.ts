@@ -26,7 +26,7 @@ export const Subtitle = styled.span`
   text-transform: uppercase;
   color: var(--violet);
   letter-spacing: 0.05em;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const TitleWrapper = styled.div`

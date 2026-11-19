@@ -1,43 +1,43 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from "react";
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
-import * as S from './RegisterPage.styles';
+import * as S from "./RegisterPage.styles";
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError('');
+    if (error) setError("");
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.password) {
-      setError('Пожалуйста, заполните все поля');
+      setError("Пожалуйста, заполните все поля");
       return;
     }
     if (formData.password.length < 6) {
-      setError('Пароль должен быть не менее 6 символов');
+      setError("Пароль должен быть не менее 6 символов");
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Пароли не совпадают');
+      setError("Пароли не совпадают");
       return;
     }
 
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -53,7 +53,10 @@ export const RegisterPage = () => {
 
         {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        >
           <S.InputGroup>
             <label htmlFor="name">Как вас зовут?</label>
             <input
@@ -102,9 +105,7 @@ export const RegisterPage = () => {
             />
           </S.InputGroup>
 
-          <S.SubmitButton type="submit">
-            Зарегистрироваться
-          </S.SubmitButton>
+          <S.SubmitButton type="submit">Зарегистрироваться</S.SubmitButton>
         </form>
 
         <S.FooterText>

@@ -38,33 +38,31 @@ const Sidebar = styled.aside`
 `;
 
 function Dashboard() {
-    const navigate = useNavigate();
-    return (
-        <PageContainer>
-            <WelcomeBanner onNewDreamClick={() => navigate('/dreamform')} />
-            
-            <DashboardLayout>
-                <div>
-                    <CardsGrid>
-                        <DreamCard
-                            imageSrc={im1}
-                            title="Хочу открыть котокафе"
-                            progress={51}
-                            targetDate="Июль 28, 2025"
-                            onContinueChat={() => navigate('/dreams')}
-                        />
-                    </CardsGrid>
-                </div>
-                
-                <Sidebar>
-                    <StreakCard/>
-                    <WeekProgress/>
-                </Sidebar>
+  const navigate = useNavigate();
+  return (
+    <PageContainer>
+      <WelcomeBanner onNewDreamClick={() => navigate("/dreamform")} />
 
-            </DashboardLayout>
-        </PageContainer>
+      <DashboardLayout>
+        <div>
+          <CardsGrid>
+            <DreamCard
+              imageSrc={im1}
+              title="Хочу открыть котокафе"
+              progress={51}
+              targetDate="Июль 28, 2025"
+              onContinueChat={() => navigate("/dreams")}
+            />
+          </CardsGrid>
+        </div>
 
-    )
+        <Sidebar>
+          <StreakCard />
+          <WeekProgress />
+        </Sidebar>
+      </DashboardLayout>
+    </PageContainer>
+  );
 }
 
 export default Dashboard;

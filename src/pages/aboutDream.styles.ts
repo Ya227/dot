@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const DreamPage = styled.div`
   min-height: 100vh;
@@ -63,7 +63,7 @@ export const DreamHeaderBarFill = styled.div<{ width?: string }>`
   background: var(--purple);
   height: 100%;
   border-radius: 9999px;
-  width: ${(props) => props.width || '0%'};
+  width: ${(props) => props.width || "0%"};
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
