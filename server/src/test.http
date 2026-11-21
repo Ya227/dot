@@ -1,65 +1,291 @@
-### 1. Создание новой привычки
-POST http://localhost:3001/api/habits
+@baseUrl = http://localhost:3001/api
+
+### =========================================================
+### 1. ПОЛЬЗОВАТЕЛИ (Users)
+### =========================================================
+
+### Создать тестового пользователя
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "title": "Пить воду",
-  "description": "Выпивать 2 литра в день",
-  "frequency": "daily"
+  "email": "frontend_test@dot.com",
+  "password": "testPassword123",
+  "first_name": "Алексей",
+  "last_name": "Тестовый",
+  "avatar_url": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&h=100"
+}
+# 👉 ВАЖНО: Скопируй "id" из ответа ниже, он понадобится для создания мечты.
+
+
+### Получить список всех пользователей
+GET {{baseUrl}}/users
+
+
+### =========================================================
+### 2. МЕЧТЫ (Dreams)
+### =========================================================
+
+### Создать новую мечту с обложкой
+# ⚠️ ЗАМЕНИ user_id НА РЕАЛЬНЫЙ ID ИЗ ПРЕДЫДУЩЕГО ОТВЕТА
+POST {{baseUrl}}/dreams
+Content-Type: application/json
+
+{
+  "title": "Поездка в Киото весной",
+  "description": "Увидеть цветение сакуры и попробовать настоящий рамен",
+  "target_date": "2027-04-15",
+  "image_url": "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80"
+}
+# 👉 ВАЖНО: Скопируй "id" этой мечты, он понадобится для этапов.
+
+
+### Получить список всех мечт (для дашборда)
+GET {{baseUrl}}/dreams
+
+
+### Получить детальную информацию о мечте (с пустым планом)
+# ⚠️ ЗАМЕНИ НА ID СОЗДАННОЙ МЕЧТЫ
+GET {{baseUrl}}/dreams/
+
+### =========================================================
+### 7. ПОЛНОЦЕННЫЙ ПЛАН: НЕСКОЛЬКО ЭТАПОВ С ЗАДАЧАМИ
+### =========================================================
+
+### Этап 1: Исследование и планирование
+POST {{baseUrl}}/dreams/66f21630-7977-407e-854e-85b19f9f9818/stages
+Content-Type: application/json
+
+{
+  "title": "Исследование и планирование",
+  "stage_order": 1
 }
 
-### 2. Получение списка всех привычек
-GET http://localhost:3001/api/habits
 
-### 3. Обновление привычки 
-# ВАЖНО: замени 'ВСТАВЬ_СЮДА_ID' на реальный id, который вернется в ответе на запрос №1
-PUT http://localhost:3001/api/habits/0c788927-ce0d-459e-8881-73da6751d28c
+### Этап 2: Финансовая подготовка
+POST {{baseUrl}}/dreams/66f21630-7977-407e-854e-85b19f9f9818/stages
 Content-Type: application/json
 
 {
-  "title": "Пить 3 литра воды",
-  "is_active": true
-}
-
-### 4. Удаление привычки
-# ВАЖНО: замени 'ВСТАВЬ_СЮДА_ID' на реальный id
-DELETE http://localhost:3001/api/habits/0c788927-ce0d-459e-8881-73da6751d28c
-
-### Получить список мечт (чтобы узнать ID)
-GET http://localhost:3001/api/dreams
-
-### Получить детальную информацию о мечте с планом
-GET http://localhost:3001/api/dreams/6450cba9-5137-4ae6-b570-4ae46494e8e1
-
-### Создать новый этап в мечте
-POST http://localhost:3001/api/dreams/6450cba9-5137-4ae6-b570-4ae46494e8e1/stages
-Content-Type: application/json
-
-{
-  "title": "Бронирование и виза",
+  "title": "Финансовая подготовка",
   "stage_order": 2
 }
 
-### Создать задачу в этапе
-### Подставь stage_id из ответа на предыдущий запрос
-POST http://localhost:3001/api/stages/1b22e748-92f2-458d-b4a9-b724dd9a0877/tasks
+
+### Этап 3: Бронирование и документы
+POST {{baseUrl}}/dreams/66f21630-7977-407e-854e-85b19f9f9818/stages
 Content-Type: application/json
 
 {
-  "title": "Забронировать отель в Киото",
+  "title": "Бронирование и документы",
+  "stage_order": 3
+}
+
+
+### Этап 4: Финальные приготовления
+POST {{baseUrl}}/dreams/66f21630-7977-407e-854e-85b19f9f9818/stages
+Content-Type: application/json
+
+{
+  "title": "Финальные приготовления",
+  "stage_order": 4
+}
+
+
+### =========================================================
+### 8. ЗАДАЧИ ДЛЯ ЭТАПА 1 (Исследование)
+### =========================================================
+
+### Задача 1.1
+POST {{baseUrl}}/stages/8be8de85-b00b-4f0d-bfe0-a0ed09d3aaca/tasks
+Content-Type: application/json
+
+{
+  "title": "Изучить лучшие сезоны для посещения",
+  "description": "Посмотреть погоду, фестивали и цены по месяцам",
   "task_order": 1,
+  "deadline": "2026-12-10",
+  "is_ai_generated": true
+}
+
+
+### Задача 1.2
+POST {{baseUrl}}/stages/8be8de85-b00b-4f0d-bfe0-a0ed09d3aaca/tasks
+Content-Type: application/json
+
+{
+  "title": "Составить список достопримечательностей",
+  "description": "Храмы, сады, музеи, районы",
+  "task_order": 2,
+  "deadline": "2026-12-15",
+  "is_ai_generated": false
+}
+
+
+### Задача 1.3
+POST {{baseUrl}}/stages/8be8de85-b00b-4f0d-bfe0-a0ed09d3aaca/tasks
+Content-Type: application/json
+
+{
+  "title": "Почитать отзывы путешественников",
+  "description": "Блоги, форумы, YouTube",
+  "task_order": 3,
+  "deadline": "2026-12-20",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 9. ЗАДАЧИ ДЛЯ ЭТАПА 2 (Финансы)
+### =========================================================
+
+### Задача 2.1
+POST {{baseUrl}}/stages/6308d3c3-7932-4895-8129-e89d5980fe8f/tasks
+Content-Type: application/json
+
+{
+  "title": "Рассчитать общий бюджет",
+  "description": "Авиабилеты + жилье + еда + развлечения",
+  "task_order": 1,
+  "deadline": "2027-01-05",
+  "is_ai_generated": false
+}
+
+
+### Задача 2.2
+POST {{baseUrl}}/stages/6308d3c3-7932-4895-8129-e89d5980fe8f/tasks
+Content-Type: application/json
+
+{
+  "title": "Начать откладывать деньги",
+  "description": "Открывать накопительный счет",
+  "task_order": 2,
   "deadline": "2027-01-15",
   "is_ai_generated": true
 }
 
-### Отметить задачу выполненной (чекбокс)
-### Подставь task_id из ответа на предыдущий запрос
-PATCH http://localhost:3001/api/tasks/8472490f-1866-42fa-8319-aa8082621536
+
+### =========================================================
+### 10. ЗАДАЧИ ДЛЯ ЭТАПА 3 (Бронирование)
+### =========================================================
+
+### Задача 3.1
+POST {{baseUrl}}/stages/07a915fb-413f-407d-b40d-9f8af867b4e8/tasks
+Content-Type: application/json
+
+{
+  "title": "Забронировать авиабилеты",
+  "description": "Сравнить цены на Skyscanner и Aviasales",
+  "task_order": 1,
+  "deadline": "2027-02-01",
+  "is_ai_generated": true
+}
+
+
+### Задача 3.2
+POST {{baseUrl}}/stages/07a915fb-413f-407d-b40d-9f8af867b4e8/tasks
+Content-Type: application/json
+
+{
+  "title": "Забронировать отель или риокан",
+  "description": "Выбрать район Гион или Арасияма",
+  "task_order": 2,
+  "deadline": "2027-02-10",
+  "is_ai_generated": false
+}
+
+
+### Задача 3.3
+POST {{baseUrl}}/stages/07a915fb-413f-407d-b40d-9f8af867b4e8/tasks
+Content-Type: application/json
+
+{
+  "title": "Оформить визу (если нужна)",
+  "description": "Проверить требования консульства",
+  "task_order": 3,
+  "deadline": "2027-02-15",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 11. ЗАДАЧИ ДЛЯ ЭТАПА 4 (Финальные приготовления)
+### =========================================================
+
+### Задача 4.1
+POST {{baseUrl}}/stages/7fb2d821-f6d7-4d08-a244-5898823d6d39/tasks
+Content-Type: application/json
+
+{
+  "title": "Купить дорожную страховку",
+  "description": "Сравнить предложения страховых компаний",
+  "task_order": 1,
+  "deadline": "2027-03-20",
+  "is_ai_generated": false
+}
+
+
+### Задача 4.2
+POST {{baseUrl}}/stages/7fb2d821-f6d7-4d08-a244-5898823d6d39/tasks
+Content-Type: application/json
+
+{
+  "title": "Собрать аптечку",
+  "description": "Лекарства, пластыри, антисептик",
+  "task_order": 2,
+  "deadline": "2027-04-01",
+  "is_ai_generated": true
+}
+
+
+### Задача 4.3
+POST {{baseUrl}}/stages/7fb2d821-f6d7-4d08-a244-5898823d6d39/tasks
+Content-Type: application/json
+
+{
+  "title": "Скачать офлайн-карты и переводчик",
+  "description": "Google Maps, Google Translate",
+  "task_order": 3,
+  "deadline": "2027-04-10",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 12. ОТМЕТИТЬ НЕКОТОРЫЕ ЗАДАЧИ ВЫПОЛНЕННЫМИ
+### =========================================================
+
+### Отметить задачу 1.1 выполненной
+PATCH {{baseUrl}}/tasks/84b76d30-24ca-4efe-be5f-75dacb830894
 Content-Type: application/json
 
 {
   "is_completed": true
 }
 
-### Удалить задачу
-DELETE http://localhost:3001/api/tasks/8472490f-1866-42fa-8319-aa8082621536
+
+### Отметить задачу 1.2 выполненной
+PATCH {{baseUrl}}/tasks/67a39c04-ae61-49b5-9cc9-17a7ff1f0de4
+Content-Type: application/json
+
+{
+  "is_completed": true
+}
+
+
+### Отметить задачу 2.1 выполненной
+PATCH {{baseUrl}}/tasks/5262dd59-d2ec-4cbe-81cf-dcf5249dddc7
+Content-Type: application/json
+
+{
+  "is_completed": true
+}
+
+
+### =========================================================
+### 13. ФИНАЛЬНАЯ ПРОВЕРКА: ПОЛУЧИТЬ ПОЛНУЮ СТРУКТУРУ МЕЧТЫ
+### =========================================================
+
+### Получить мечту со всеми этапами и задачами
+# ⚠️ ЗАМЕНИ НА ID МЕЧТЫ
+GET {{baseUrl}}/dreams/66f21630-7977-407e-854e-85b19f9f9818

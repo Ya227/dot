@@ -6,6 +6,7 @@ export interface IUser {
   password_hash: string;
   first_name: string | null;
   last_name: string | null;
+  avatar_url: string | null;
   subscription_status: string;
   ai_requests_count: number;
   created_at: Date;
