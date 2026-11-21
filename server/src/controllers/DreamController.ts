@@ -39,8 +39,14 @@ export class DreamController {
 
   static async createDream(req: AuthRequest, res: Response) {
     try {
-      const { title, description, target_date } = req.body;
-      const dream = await DreamModel.create(req.user!.id, title, description, target_date);
+      const { title, description, target_date, image_url } = req.body;
+      const dream = await DreamModel.create(
+        req.user!.id,
+        title,
+        description,
+        target_date,
+        image_url,
+      );
       res.status(201).json(dream);
     } catch (error) {
       console.error(error);

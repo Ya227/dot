@@ -5,6 +5,7 @@ export interface IDream {
   user_id: string;
   title: string;
   description: string | null;
+  image_url: string | null;
   target_date: Date | null;
   is_ai_generated: boolean;
   dream_status: string;
@@ -20,13 +21,20 @@ export class DreamModel {
     title: string,
     description?: string,
     targetDate?: Date,
+    imageUrl?: string,
   ): Promise<IDream> {
     const query = `
-      INSERT INTO dreams (user_id, title, description, target_date)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO dreams (user_id, title, description, target_date, image_url)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const result = await pool.query(query, [userId, title, description, targetDate]);
+    const result = await pool.query(query, [
+      userId,
+      title,
+      description,
+      targetDate,
+      imageUrl || null,
+    ]);
     return result.rows[0];
   }
 
