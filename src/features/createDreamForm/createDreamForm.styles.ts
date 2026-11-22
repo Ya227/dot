@@ -101,30 +101,6 @@ export const Input = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-export const Select = styled.select<{ hasError?: boolean }>`
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid ${(props) => (props.hasError ? "#f87171" : "rgba(255, 255, 255, 0.4)")};
-  background: #6d3abd;
-  font-size: 14px;
-  color: #ffffff;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  option {
-    background: #6d3abd;
-    color: #ffffff;
-  }
-
-  &:focus {
-    border-color: ${(props) => (props.hasError ? "#f87171" : "#ffffff")};
-    background: #733dd0;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-  }
-`;
-
 export const TextArea = styled.textarea<{ hasError?: boolean }>`
   width: 100%;
   padding: 12px 16px;
