@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,7 @@ import { WelcomeBanner } from "../components/welcomeBanner/welcomeBanner";
 import { DreamCard } from "../features/dreamCard/dreamCard";
 import { StreakCard } from "../features/streakCard/streakCard";
 import { WeekProgress } from "../features/weekProgress/weekProgress";
+import { getApiErrorMessage, useGetDreamsQuery } from "../services/dreamsApi";
 
 const PageContainer = styled.div`
   max-width: 1280px;
@@ -42,31 +43,6 @@ const GridMessage = styled.p`
   color: var(--muted);
 `;
 
-interface Dream {
-  id: string;
-  title: string;
-  image_url: string | null;
-  target_date: string | null;
-  progress: number;
-}
-
-const isDreamArray = (value: unknown): value is Dream[] =>
-  Array.isArray(value) &&
-  value.every((dream: unknown) => {
-    if (typeof dream !== "object" || dream === null) {
-      return false;
-    }
-
-    const record = dream as Record<string, unknown>;
-    return (
-      typeof record.id === "string" &&
-      typeof record.title === "string" &&
-      typeof record.progress === "number" &&
-      (record.image_url === null || typeof record.image_url === "string") &&
-      (record.target_date === null || typeof record.target_date === "string")
-    );
-  });
-
 const formatTargetDate = (targetDate: string | null): string => {
   if (!targetDate) {
     return "Дата не указана";
@@ -93,69 +69,22 @@ const formatTargetDate = (targetDate: string | null): string => {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [dreams, setDreams] = useState<Dream[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-
-  useEffect(() => {
-    let isActive = true;
-
-    const loadDreams = async () => {
-      try {
-        const response = await fetch("http://localhost:3001/api/dreams");
-        const result: unknown = await response.json();
-
-        if (!response.ok) {
-          const message =
-            typeof result === "object" &&
-            result !== null &&
-            "message" in result &&
-            typeof result.message === "string"
-              ? result.message
-              : "Не удалось загрузить список мечт";
-          throw new Error(message);
-        }
-
-        if (!isDreamArray(result)) {
-          throw new Error("Сервер вернул некорректный список мечт");
-        }
-
-        if (isActive) {
-          setDreams(result);
-        }
-      } catch (error) {
-        if (isActive) {
-          setLoadError(
-            error instanceof Error ? error.message : "Не удалось загрузить список мечт",
-          );
-        }
-      } finally {
-        if (isActive) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void loadDreams();
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
+  const { data: dreams = [], isLoading, error } = useGetDreamsQuery();
+  const loadError = getApiErrorMessage(error, "Не удалось загрузить список мечт");
 
   return (
     <PageContainer>
       <WelcomeBanner
         activeDreamsCount={dreams.length}
-        onNewDreamClick={() => navigate("/dreamform")} 
-        />
+        onNewDreamClick={() => navigate("/dreamform")}
+      />
 
       <DashboardLayout>
         <div>
           <CardsGrid>
             {isLoading ? (
               <GridMessage role="status">Загружаем мечты...</GridMessage>
-            ) : loadError ? (
+            ) : error ? (
               <GridMessage role="alert">{loadError}</GridMessage>
             ) : dreams.length === 0 ? (
               <GridMessage>Пока нет мечт. Создайте первую!</GridMessage>

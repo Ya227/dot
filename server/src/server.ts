@@ -1,8 +1,11 @@
 import dotenv from "dotenv";
 
 import app from "./app";
+import { assertJwtConfiguration } from "./utils/jwt";
 
 dotenv.config();
+
+assertJwtConfiguration();
 
 const PORT = process.env.PORT || 3001;
 

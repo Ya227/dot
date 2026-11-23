@@ -13,14 +13,30 @@ export interface IUser {
   updated_at: Date;
 }
 
+export interface IUserProfile {
+  first_name?: string | null;
+  last_name?: string | null;
+  avatar_url?: string | null;
+}
+
 export class UserModel {
-  static async create(email: string, passwordHash: string): Promise<IUser> {
+  static async create(
+    email: string,
+    passwordHash: string,
+    profile: IUserProfile = {},
+  ): Promise<IUser> {
     const query = `
-      INSERT INTO users (email, password_hash)
-      VALUES ($1, $2)
+      INSERT INTO users (email, password_hash, first_name, last_name, avatar_url)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const values = [email, passwordHash];
+    const values = [
+      email,
+      passwordHash,
+      profile.first_name ?? null,
+      profile.last_name ?? null,
+      profile.avatar_url ?? null,
+    ];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -41,13 +57,5 @@ export class UserModel {
     `;
     const result = await pool.query(query, [id]);
     return result.rows[0];
-  }
-
-  static async getAll(): Promise<IUser[]> {
-    const query = `
-      SELECT * FROM users;
-    `;
-    const result = await pool.query(query);
-    return result.rows;
   }
 }

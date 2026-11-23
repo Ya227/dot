@@ -1,11 +1,11 @@
 import { Router } from "express";
 
 import { DreamController } from "../controllers/DreamController";
-import { authenticate } from "../middleware/tempAuth";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
-router.use(authenticate); // все маршруты ниже защищены заглушкой
+router.use(authenticate);
 
 router.get("/", DreamController.getDreams);
 router.get("/:id", DreamController.getDreamById);
