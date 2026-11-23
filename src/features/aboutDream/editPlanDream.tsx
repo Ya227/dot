@@ -10,7 +10,7 @@ import {
   useUpdateStageMutation,
   useUpdateTaskMutation,
 } from "../../services/dreamsApi";
-import * as S from "./planDream.styles";
+import { PlanFormModal } from "./PlanFormModal";
 
 interface EditPlanDreamProps {
   dreamId: string;
@@ -19,19 +19,6 @@ interface EditPlanDreamProps {
 }
 
 export const EditPlanDream: React.FC<EditPlanDreamProps> = ({ dreamId, stages: initialStages, onClose }) => {
-  const [stages, setStages] = useState<PlanDraftStage[]>(
-    initialStages.map((stage) => ({
-      id: stage.id,
-      title: stage.title,
-      tasks: stage.tasks.map((task) => ({
-        id: task.id,
-        title: task.title,
-        deadline: task.deadline ? task.deadline.slice(0, 10) : "",
-        is_ai_generated: task.is_ai_generated,
-        is_completed: task.is_completed,
-      })),
-    })),
-  );
   const [createStage] = useCreateStageMutation();
   const [updateStage] = useUpdateStageMutation();
   const [deleteStage] = useDeleteStageMutation();
@@ -40,15 +27,29 @@ export const EditPlanDream: React.FC<EditPlanDreamProps> = ({ dreamId, stages: i
   const [deleteTask] = useDeleteTaskMutation();
   const [saving, setSaving] = useState(false);
 
-  const updateStageTitle = (stageIndex: number, title: string) =>
-    setStages((current) => current.map((stage, index) => (index === stageIndex ? { ...stage, title } : stage)));
+  const mappedInitialStages: PlanDraftStage[] = initialStages.map((stage) => ({
+    id: stage.id,
+    title: stage.title,
+    tasks: stage.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      deadline: task.deadline ? task.deadline.slice(0, 10) : "",
+      is_ai_generated: task.is_ai_generated,
+      is_completed: task.is_completed,
+    })),
+  }));
 
-  const save = async () => {
+  const save = async (stages: PlanDraftStage[]) => {
     setSaving(true);
     try {
       const validStages = stages
-        .map((stage) => ({ ...stage, title: stage.title.trim(), tasks: stage.tasks.filter((task) => task.title.trim()) }))
+        .map((stage) => ({
+          ...stage,
+          title: stage.title.trim(),
+          tasks: stage.tasks.filter((task) => task.title.trim()),
+        }))
         .filter((stage) => stage.title);
+
       const originalTaskIds = new Set(initialStages.flatMap((stage) => stage.tasks.map((task) => task.id)));
       const keptTaskIds = new Set(validStages.flatMap((stage) => stage.tasks.map((task) => task.id).filter(Boolean)));
 
@@ -100,105 +101,13 @@ export const EditPlanDream: React.FC<EditPlanDreamProps> = ({ dreamId, stages: i
   };
 
   return (
-    <S.ModalOverlay onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <S.Modal>
-        <S.ModalTitle>Изменить план</S.ModalTitle>
-        {stages.map((stage, stageIndex) => (
-          <S.DraftStage key={stage.id || stageIndex}>
-            <S.DraftInput
-              value={stage.title}
-              onChange={(event) => updateStageTitle(stageIndex, event.target.value)}
-            />
-            {stage.tasks.map((task, taskIndex) => (
-              <S.DraftRow key={task.id || taskIndex}>
-                <S.DraftInput
-                  value={task.title}
-                  onChange={(event) =>
-                    setStages((current) =>
-                      current.map((item, index) =>
-                        index === stageIndex
-                          ? { ...item, tasks: item.tasks.map((value, pos) => pos === taskIndex ? { ...value, title: event.target.value } : value) }
-                          : item,
-                      ),
-                    )
-                  }
-                />
-                <S.DraftInput
-                  type="date"
-                  value={task.deadline}
-                  onChange={(event) =>
-                    setStages((current) =>
-                      current.map((item, index) =>
-                        index === stageIndex
-                          ? { ...item, tasks: item.tasks.map((value, pos) => pos === taskIndex ? { ...value, deadline: event.target.value } : value) }
-                          : item,
-                      ),
-                    )
-                  }
-                />
-                <input
-                  type="checkbox"
-                  checked={task.is_ai_generated}
-                  onChange={(event) =>
-                    setStages((current) =>
-                      current.map((item, index) =>
-                        index === stageIndex
-                          ? { ...item, tasks: item.tasks.map((value, pos) => pos === taskIndex ? { ...value, is_ai_generated: event.target.checked } : value) }
-                          : item,
-                      ),
-                    )
-                  }
-                />
-                <S.DraftButton
-                  type="button"
-                  onClick={() =>
-                    setStages((current) =>
-                      current.map((item, index) =>
-                        index === stageIndex
-                          ? { ...item, tasks: item.tasks.filter((_, index) => index !== taskIndex) }
-                          : item,
-                      ),
-                    )
-                  }
-                >
-                  ×
-                </S.DraftButton>
-              </S.DraftRow>
-            ))}
-            <S.DraftButton
-              type="button"
-              onClick={() =>
-                setStages((current) =>
-                  current.map((item, index) =>
-                    index === stageIndex
-                      ? { ...item, tasks: [...item.tasks, { title: "", deadline: "", is_ai_generated: false }] }
-                      : item,
-                  ),
-                )
-              }
-            >
-              + Добавить пункт
-            </S.DraftButton>
-          </S.DraftStage>
-        ))}
-        <S.DraftButton
-          type="button"
-          onClick={() =>
-            setStages((current) => [
-              ...current,
-              { title: `Этап ${current.length + 1}`, tasks: [{ title: "", deadline: "", is_ai_generated: false }] },
-            ])
-          }
-        >
-          + Добавить этап
-        </S.DraftButton>
-        <S.ModalActions>
-          <S.DraftButton type="button" onClick={onClose}>Отмена</S.DraftButton>
-          <S.DraftButton type="button" onClick={save} disabled={saving}>
-            {saving ? "Сохранение..." : "Сохранить план"}
-          </S.DraftButton>
-        </S.ModalActions>
-      </S.Modal>
-    </S.ModalOverlay>
+    <PlanFormModal
+      title="Изменить план"
+      submitLabel="Сохранить план"
+      initialStages={mappedInitialStages}
+      saving={saving}
+      onClose={onClose}
+      onSubmit={save}
+    />
   );
 };

@@ -361,6 +361,29 @@ export const TaskRow = styled.label`
   cursor: pointer;
 `;
 
+export const StageChevron = styled.span<{ $open: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: inherit;
+  transition: transform 0.2s ease;
+  transform: ${({ $open }) => ($open ? 'rotate(90deg)' : 'rotate(0deg)')};
+
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+`;
+
+
 export const TaskCheckbox = styled.input`
   width: 18px;
   height: 18px;
@@ -437,11 +460,17 @@ export const DraftInput = styled.input`
 `;
 
 export const DraftButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  margin-top: 0.75rem; /* создаёт отступ от инпута сверху, равный отступу снизу */
   border: 1px solid var(--purple);
   border-radius: 0.55rem;
   background: var(--page);
   color: var(--purple-dark);
   padding: 0.55rem 0.75rem;
+  line-height: 1;
   cursor: pointer;
 `;
 
@@ -450,4 +479,53 @@ export const ModalActions = styled.div`
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1.25rem;
+`;
+
+export const DraftStageHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+`;
+
+export const DraftStageNumber = styled.span`
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--purple-dark);
+  opacity: 0.85;
+`;
+
+export const DraftStageTitleInput = styled(DraftInput)`
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-bottom: 0.35rem;
+  background: color-mix(in srgb, var(--purple) 5%, var(--page));
+  border-color: color-mix(in srgb, var(--purple) 40%, transparent);
+
+  &:focus {
+    background: var(--page);
+  }
+`;
+
+export const TaskAiBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  text-decoration: none;
+  color: var(--purple-dark);
+  background: color-mix(in srgb, var(--purple) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+
+  &::before {
+    content: "✦";
+    font-size: 0.62rem;
+  }
 `;

@@ -128,7 +128,12 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
                     })
                   }
                 >
-                  <span>{isOpen ? "⌄" : "›"}</span>
+                  <S.StageChevron $open={isOpen}>
+                    <svg viewBox="0 0 24 24">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </S.StageChevron>
+
                   <S.StageTitle>{stageIndex + 1}. {stage.title}</S.StageTitle>
                   {stageProgress === 100 && <S.StageBadge $completed>Выполнено</S.StageBadge>}
                   {stage.tasks.length > 0 && <S.StageProgress>{stageProgress}%</S.StageProgress>}
@@ -144,7 +149,7 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
                         />
                         <S.TaskTitle $completed={task.is_completed}>
                           {task.title}
-                          {task.is_ai_generated && "  ИИ"}
+                          {task.is_ai_generated && <S.TaskAiBadge>ИИ</S.TaskAiBadge>}
                         </S.TaskTitle>
                         <S.TaskDeadline>{formatDeadline(task.deadline)}</S.TaskDeadline>
                       </S.TaskRow>
