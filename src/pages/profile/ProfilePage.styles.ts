@@ -9,7 +9,7 @@ export const PageWrapper = styled.div`
 `;
 
 export const Container = styled.div`
-  max-width: 1100px;
+  max-width: 1200px; /* Было 1100px */
   margin: 0 auto;
 `;
 
@@ -42,7 +42,7 @@ export const PageHeader = styled.div`
 
 export const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 360px 1fr; /* Было 320px */
   gap: 24px;
   align-items: start;
 

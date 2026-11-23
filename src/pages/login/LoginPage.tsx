@@ -1,16 +1,14 @@
 import React, { useState, FormEvent } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-
 import * as S from "./LoginPage.styles";
+import { useLoginMutation, setAccessToken } from "../../services/authApi";
+import { getApiErrorMessage } from "../../services/dreamsApi";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [login, { isLoading }] = useLoginMutation();
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,7 +16,7 @@ export const LoginPage = () => {
     if (error) setError("");
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -31,7 +29,21 @@ export const LoginPage = () => {
       return;
     }
 
-    navigate("/dashboard");
+    try {
+      const data = await login({
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      }).unwrap();
+
+      setAccessToken(data.token);
+      navigate("/dashboard");
+    } catch (err: any) {
+      if (err?.status === 401) {
+        setError("Неверный email или пароль");
+      } else {
+        setError(getApiErrorMessage(err, "Не удалось войти"));
+      }
+    }
   };
 
   return (
@@ -74,7 +86,9 @@ export const LoginPage = () => {
             />
           </S.InputGroup>
 
-          <S.SubmitButton type="submit">Войти</S.SubmitButton>
+          <S.SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? "Вход..." : "Войти"}
+          </S.SubmitButton>
         </form>
 
         <S.FooterText>
