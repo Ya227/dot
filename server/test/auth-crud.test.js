@@ -235,6 +235,23 @@ describe("Auth and owner-scoped CRUD API", () => {
     assert.equal(duplicate.status, 409);
   });
 
+  it("rejects accounts that still have a legacy plaintext password", async () => {
+    const id = createId();
+    users.set(id, {
+      id,
+      email: "legacy@example.com",
+      password_hash: "legacy-password-42",
+    });
+
+    const response = await request("/api/auth/login", {
+      method: "POST",
+      body: { email: "legacy@example.com", password: "legacy-password-42" },
+    });
+
+    assert.equal(response.status, 401);
+    assert.equal(response.body.message, "Неверный email или пароль");
+  });
+
   it("rejects requests without a valid token and removes public user routes", async () => {
     assert.equal((await request("/api/dreams")).status, 401);
     assert.equal((await request("/api/habits", { token: "invalid" })).status, 401);

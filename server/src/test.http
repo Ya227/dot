@@ -1,6 +1,8 @@
 @baseUrl = http://localhost:3001/api
-@token = paste-access-token-here
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZyb250ZW5kX3Rlc3RAZG90LmNvbSIsImlhdCI6MTc5NTQyNzYyMCwiZXhwIjoxNzk1NDMxMjIwLCJzdWIiOiIzY2MwNTIzYy02ZTk0LTQ2ZjgtYjliYi01MTAyZDVmMjJjYjcifQ.yr2HtB1GNmVJkkmm_zETj8diMq065GB1L7kKT9GBBgE
 
+# Accounts created before bcrypt was added must be removed from the test database
+# and registered again. Do not delete production accounts.
 ### Регистрация: пароль будет сохранён в виде хеша
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
@@ -38,11 +40,11 @@ Content-Type: application/json
 }
 
 ### Получить одну мечту (подставьте UUID из ответа)
-GET {{baseUrl}}/dreams/00000000-0000-4000-8000-000000000001
+GET {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509
 Authorization: Bearer {{token}}
 
 ### Частично обновить мечту
-PUT {{baseUrl}}/dreams/00000000-0000-4000-8000-000000000001
+PUT {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -71,11 +73,11 @@ Content-Type: application/json
 }
 
 ### Получить одну привычку (подставьте UUID из ответа)
-GET {{baseUrl}}/habits/00000000-0000-4000-8000-000000000002
+GET {{baseUrl}}/habits/2c4f59b8-8578-4da6-9350-336f053ea567
 Authorization: Bearer {{token}}
 
 ### Обновить привычку
-PUT {{baseUrl}}/habits/00000000-0000-4000-8000-000000000002
+PUT {{baseUrl}}/habits/2c4f59b8-8578-4da6-9350-336f053ea567
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -85,15 +87,212 @@ Content-Type: application/json
 }
 
 ### Удалить привычку
-DELETE {{baseUrl}}/habits/00000000-0000-4000-8000-000000000002
+DELETE {{baseUrl}}/habits/2c4f59b8-8578-4da6-9350-336f053ea567
 Authorization: Bearer {{token}}
 
 ### Создать этап плана для принадлежащей вам мечты
-POST {{baseUrl}}/dreams/00000000-0000-4000-8000-000000000001/stages
+POST {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509/stages
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "title": "Исследование и планирование",
   "stage_order": 1
+}
+
+### Этап 2: Финансовая подготовка
+POST {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509/stages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Финансовая подготовка",
+  "stage_order": 2
+}
+
+
+### Этап 3: Бронирование и документы
+POST {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509/stages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Бронирование и документы",
+  "stage_order": 3
+}
+
+
+### Этап 4: Финальные приготовления
+POST {{baseUrl}}/dreams/a27b9488-5ca9-45d2-b594-a992a38c6509/stages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Финальные приготовления",
+  "stage_order": 4
+}
+
+### Задача 1.1
+POST {{baseUrl}}/stages/08dc937f-37ed-455d-89c4-a56c3790d9c2/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Изучить лучшие сезоны для посещения",
+  "description": "Посмотреть погоду, фестивали и цены по месяцам",
+  "task_order": 1,
+  "deadline": "2026-12-10",
+  "is_ai_generated": true
+}
+
+
+### Задача 1.2
+POST {{baseUrl}}/stages/08dc937f-37ed-455d-89c4-a56c3790d9c2/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Составить список достопримечательностей",
+  "description": "Храмы, сады, музеи, районы",
+  "task_order": 2,
+  "deadline": "2026-12-15",
+  "is_ai_generated": false
+}
+
+
+### Задача 1.3
+POST {{baseUrl}}/stages/08dc937f-37ed-455d-89c4-a56c3790d9c2/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Почитать отзывы путешественников",
+  "description": "Блоги, форумы, YouTube",
+  "task_order": 3,
+  "deadline": "2026-12-20",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 9. ЗАДАЧИ ДЛЯ ЭТАПА 2 (Финансы)
+### =========================================================
+
+### Задача 2.1
+POST {{baseUrl}}/stages/68b6db16-f28a-4076-a3b0-f14e16f09677/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Рассчитать общий бюджет",
+  "description": "Авиабилеты + жилье + еда + развлечения",
+  "task_order": 1,
+  "deadline": "2027-01-05",
+  "is_ai_generated": false
+}
+
+
+### Задача 2.2
+POST {{baseUrl}}/stages/68b6db16-f28a-4076-a3b0-f14e16f09677/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Начать откладывать деньги",
+  "description": "Открывать накопительный счет",
+  "task_order": 2,
+  "deadline": "2027-01-15",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 10. ЗАДАЧИ ДЛЯ ЭТАПА 3 (Бронирование)
+### =========================================================
+
+### Задача 3.1
+POST {{baseUrl}}/stages/738ea417-e814-4323-9675-4464b8e90b8c/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Забронировать авиабилеты",
+  "description": "Сравнить цены на Skyscanner и Aviasales",
+  "task_order": 1,
+  "deadline": "2027-02-01",
+  "is_ai_generated": true
+}
+
+
+### Задача 3.2
+POST {{baseUrl}}/stages/738ea417-e814-4323-9675-4464b8e90b8c/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Забронировать отель или риокан",
+  "description": "Выбрать район Гион или Арасияма",
+  "task_order": 2,
+  "deadline": "2027-02-10",
+  "is_ai_generated": false
+}
+
+
+### Задача 3.3
+POST {{baseUrl}}/stages/738ea417-e814-4323-9675-4464b8e90b8c/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Оформить визу (если нужна)",
+  "description": "Проверить требования консульства",
+  "task_order": 3,
+  "deadline": "2027-02-15",
+  "is_ai_generated": true
+}
+
+
+### =========================================================
+### 11. ЗАДАЧИ ДЛЯ ЭТАПА 4 (Финальные приготовления)
+### =========================================================
+
+### Задача 4.1
+POST {{baseUrl}}/stages/a7464ef6-d4c9-40ce-8382-3cb1bb2949cb/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Купить дорожную страховку",
+  "description": "Сравнить предложения страховых компаний",
+  "task_order": 1,
+  "deadline": "2027-03-20",
+  "is_ai_generated": false
+}
+
+
+### Задача 4.2
+POST {{baseUrl}}/stages/a7464ef6-d4c9-40ce-8382-3cb1bb2949cb/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Собрать аптечку",
+  "description": "Лекарства, пластыри, антисептик",
+  "task_order": 2,
+  "deadline": "2027-04-01",
+  "is_ai_generated": true
+}
+
+
+### Задача 4.3
+POST {{baseUrl}}/stages/a7464ef6-d4c9-40ce-8382-3cb1bb2949cb/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Скачать офлайн-карты и переводчик",
+  "description": "Google Maps, Google Translate",
+  "task_order": 3,
+  "deadline": "2027-04-10",
+  "is_ai_generated": true
 }
