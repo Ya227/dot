@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { getApiErrorMessage, useCreateDreamMutation } from "../../services/dreamsApi";
 import * as S from "./createDreamForm.styles";
 
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -43,9 +44,9 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [createDream, { isLoading: isSubmitting }] = useCreateDreamMutation();
 
   useEffect(
     () => () => {
@@ -73,9 +74,7 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setSubmitError("");
@@ -121,29 +120,17 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
       return;
     }
 
-    setIsSubmitting(true);
     setSubmitError("");
     setIsSubmitted(false);
 
     try {
       const imageUrl = formData.image ? await readFileAsDataUrl(formData.image) : null;
-      const response = await fetch("http://localhost:3001/api/dreams", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: formData.title,
-          description: formData.description,
-          target_date: formData.deadline,
-          image_url: imageUrl,
-        }),
-      });
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Не удалось сохранить мечту");
-      }
+      await createDream({
+        title: formData.title,
+        description: formData.description,
+        target_date: formData.deadline,
+        image_url: imageUrl,
+      }).unwrap();
 
       onSubmit?.(formData);
       setFormData({
@@ -159,11 +146,7 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
       setIsSubmitted(true);
     } catch (error) {
       console.error("Ошибка при сохранении мечты:", error);
-      setSubmitError(
-        error instanceof Error ? error.message : "Не удалось сохранить мечту. Попробуйте ещё раз.",
-      );
-    } finally {
-      setIsSubmitting(false);
+      setSubmitError(getApiErrorMessage(error, "Не удалось сохранить мечту. Попробуйте ещё раз."));
     }
   };
 

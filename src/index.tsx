@@ -1,9 +1,11 @@
 import React from "react";
 
+import { Provider } from "react-redux";
 import ReactDOM from "react-dom/client";
 
 import App from "./app";
 import { GlobalStyles } from "./assets/globalStyles";
+import { store } from "./store";
 
 let root: ReactDOM.Root | null = null;
 
@@ -23,7 +25,9 @@ export const mount = (
   root.render(
     <>
       <GlobalStyles />
-      <Component />
+      <Provider store={store}>
+        <Component />
+      </Provider>
     </>,
   );
 
@@ -32,7 +36,9 @@ export const mount = (
       root?.render(
         <>
           <GlobalStyles />
-          <App />
+          <Provider store={store}>
+            <App />
+          </Provider>
         </>,
       );
     });
