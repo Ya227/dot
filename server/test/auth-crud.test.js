@@ -46,6 +46,67 @@ pool.query = async (sql, values = []) => {
     users.set(user.id, user);
     return rows([user]);
   }
+  if (
+    query.startsWith("SELECT id, email, first_name, last_name, avatar_url, created_at, updated_at")
+  ) {
+    const user = users.get(values[0]);
+    return rows(
+      user
+        ? [
+            {
+              id: user.id,
+              email: user.email,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              avatar_url: user.avatar_url,
+              created_at: user.created_at,
+              updated_at: user.updated_at,
+            },
+          ]
+        : [],
+    );
+  }
+  if (query.startsWith("SELECT * FROM users WHERE id = $1")) {
+    const user = users.get(values[0]);
+    return rows(user ? [user] : []);
+  }
+  if (query.startsWith("UPDATE users SET password_hash")) {
+    const [password_hash, id] = values;
+    const user = users.get(id);
+    if (!user) return { rowCount: 0, rows: [] };
+    user.password_hash = password_hash;
+    return { rowCount: 1, rows: [{ id }] };
+  }
+  if (query.startsWith("UPDATE users SET")) {
+    const id = values[values.length - 1];
+    const user = users.get(id);
+    if (!user) return rows([]);
+    const setters = query.match(/SET (.*), updated_at = CURRENT_TIMESTAMP WHERE/i)[1];
+    for (const setter of setters.split(", ")) {
+      const [, field, position] = setter.match(/(\w+) = \$(\d+)/);
+      const value = values[Number(position) - 1];
+      if (
+        field === "email" &&
+        [...users.values()].some((item) => item.email === value && item.id !== id)
+      ) {
+        const error = new Error("duplicate email");
+        error.code = "23505";
+        throw error;
+      }
+      user[field] = value;
+    }
+    return rows([
+      {
+        id: user.id,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        avatar_url: user.avatar_url,
+        created_at: user.created_at,
+        updated_at: new Date().toISOString(),
+      },
+    ]);
+  }
   if (query.startsWith("SELECT * FROM dreams WHERE user_id = $1")) {
     return rows([...dreams.values()].filter((item) => item.user_id === values[0]));
   }
@@ -252,6 +313,84 @@ describe("Auth and owner-scoped CRUD API", () => {
     assert.equal(response.body.message, "Неверный email или пароль");
   });
 
+  it("reads and updates the current profile and changes password securely", async () => {
+    const account = await register("profile@example.com");
+
+    assert.equal((await request("/api/users/me")).status, 401);
+    const profile = await request("/api/users/me", { token: account.token });
+    assert.equal(profile.status, 200);
+    assert.equal(profile.body.id, account.user.id);
+    assert.equal(profile.body.first_name, "Test");
+    assert.equal("password_hash" in profile.body, false);
+
+    const updated = await request("/api/users/me", {
+      method: "PATCH",
+      token: account.token,
+      body: { first_name: "Анна", last_name: "Иванова", avatar_url: "https://example.com/a.png" },
+    });
+    assert.equal(updated.status, 200);
+    assert.equal(updated.body.first_name, "Анна");
+    assert.equal(updated.body.last_name, "Иванова");
+    assert.equal(updated.body.avatar_url, "https://example.com/a.png");
+    assert.equal("password_hash" in updated.body, false);
+
+    const emailWithoutPassword = await request("/api/users/me", {
+      method: "PATCH",
+      token: account.token,
+      body: { email: "new@example.com" },
+    });
+    assert.equal(emailWithoutPassword.status, 400);
+
+    const emailWithWrongPassword = await request("/api/users/me", {
+      method: "PATCH",
+      token: account.token,
+      body: { email: "new@example.com", current_password: "incorrect-password" },
+    });
+    assert.equal(emailWithWrongPassword.status, 401);
+
+    const emailUpdated = await request("/api/users/me", {
+      method: "PATCH",
+      token: account.token,
+      body: { email: "  NEW@example.com ", current_password: "correct-horse-42" },
+    });
+    assert.equal(emailUpdated.status, 200);
+    assert.equal(emailUpdated.body.email, "new@example.com");
+
+    await register("taken@example.com");
+    const duplicateEmail = await request("/api/users/me", {
+      method: "PATCH",
+      token: account.token,
+      body: { email: "taken@example.com", current_password: "correct-horse-42" },
+    });
+    assert.equal(duplicateEmail.status, 409);
+
+    const wrongCurrentPassword = await request("/api/users/me/password", {
+      method: "PATCH",
+      token: account.token,
+      body: { current_password: "incorrect-password", new_password: "new-password-123" },
+    });
+    assert.equal(wrongCurrentPassword.status, 401);
+
+    const passwordChanged = await request("/api/users/me/password", {
+      method: "PATCH",
+      token: account.token,
+      body: { current_password: "correct-horse-42", new_password: "new-password-123" },
+    });
+    assert.equal(passwordChanged.status, 200);
+
+    const oldPasswordLogin = await request("/api/auth/login", {
+      method: "POST",
+      body: { email: "new@example.com", password: "correct-horse-42" },
+    });
+    assert.equal(oldPasswordLogin.status, 401);
+
+    const newPasswordLogin = await request("/api/auth/login", {
+      method: "POST",
+      body: { email: "new@example.com", password: "new-password-123" },
+    });
+    assert.equal(newPasswordLogin.status, 200);
+  });
+
   it("rejects requests without a valid token and removes public user routes", async () => {
     assert.equal((await request("/api/dreams")).status, 401);
     assert.equal((await request("/api/habits", { token: "invalid" })).status, 401);
@@ -275,7 +414,7 @@ describe("Auth and owner-scoped CRUD API", () => {
       ).status,
       404,
     );
-    assert.equal((await request("/api/users")).status, 404);
+    assert.equal((await request("/api/users")).status, 401);
   });
 
   it("supports dream CRUD with partial updates and isolates records by owner", async () => {

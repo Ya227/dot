@@ -23,6 +23,41 @@ Content-Type: application/json
   "password": "testPassword123"
 }
 
+### Получить свой профиль
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{token}}
+
+### Обновить профиль (имя и аватар)
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "first_name": "Алексей",
+  "last_name": "Тестовый",
+  "avatar_url": "https://example.com/avatar.jpg"
+}
+
+### Изменить email — обязательно подтвердить текущим паролем
+PATCH {{baseUrl}}/users/me
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "new_email@dot.com",
+  "current_password": "testPassword123"
+}
+
+### Изменить пароль
+PATCH {{baseUrl}}/users/me/password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "current_password": "testPassword123",
+  "new_password": "newPassword123"
+}
+
 ### Получить мечты текущего пользователя
 GET {{baseUrl}}/dreams
 Authorization: Bearer {{token}}

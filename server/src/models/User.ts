@@ -14,9 +14,20 @@ export interface IUser {
 }
 
 export interface IUserProfile {
+  email?: string;
   first_name?: string | null;
   last_name?: string | null;
   avatar_url?: string | null;
+}
+
+export interface IUserPublicProfile {
+  id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url: string | null;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export class UserModel {
@@ -57,5 +68,55 @@ export class UserModel {
     `;
     const result = await pool.query(query, [id]);
     return result.rows[0];
+  }
+
+  static async findProfileById(id: string): Promise<IUserPublicProfile | undefined> {
+    const query = `
+      SELECT id, email, first_name, last_name, avatar_url, created_at, updated_at
+      FROM users
+      WHERE id = $1;
+    `;
+    const result = await pool.query(query, [id]);
+    return result.rows[0];
+  }
+
+  static async updateProfile(
+    id: string,
+    data: IUserProfile,
+  ): Promise<IUserPublicProfile | undefined> {
+    const fields = ["email", "first_name", "last_name", "avatar_url"] as const;
+    const values: unknown[] = [];
+    const setters = fields.flatMap((field) => {
+      if (!Object.prototype.hasOwnProperty.call(data, field) || data[field] === undefined) {
+        return [];
+      }
+      values.push(data[field]);
+      return [`${field} = $${values.length}`];
+    });
+
+    if (setters.length === 0) {
+      return this.findProfileById(id);
+    }
+
+    values.push(id);
+    const query = `
+      UPDATE users
+      SET ${setters.join(", ")}, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $${values.length}
+      RETURNING id, email, first_name, last_name, avatar_url, created_at, updated_at;
+    `;
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  }
+
+  static async updatePassword(id: string, passwordHash: string): Promise<boolean> {
+    const query = `
+      UPDATE users
+      SET password_hash = $1, updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING id;
+    `;
+    const result = await pool.query(query, [passwordHash, id]);
+    return result.rowCount !== 0;
   }
 }
