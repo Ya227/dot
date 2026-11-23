@@ -48,20 +48,31 @@ export class PlanTaskModel {
     return result.rows;
   }
 
-  static async toggleComplete(id: string, isCompleted: boolean): Promise<void> {
+  static async toggleComplete(
+    id: string,
+    userId: string,
+    isCompleted: boolean,
+  ): Promise<IPlanTask | undefined> {
     const query = `
-      UPDATE plan_tasks 
-      SET is_completed = $1, updated_at = CURRENT_TIMESTAMP 
-      WHERE id = $2;
+      UPDATE plan_tasks pt
+      SET is_completed = $1, updated_at = CURRENT_TIMESTAMP
+      FROM plan_stages ps
+      JOIN dreams d ON d.id = ps.dream_id
+      WHERE pt.id = $2 AND pt.stage_id = ps.id AND d.user_id = $3
+      RETURNING pt.*;
     `;
-    await pool.query(query, [isCompleted, id]);
+    const result = await pool.query(query, [isCompleted, id, userId]);
+    return result.rows[0];
   }
 
-  static async deleteById(id: string): Promise<void> {
+  static async deleteById(id: string, userId: string): Promise<boolean> {
     const query = `
-      DELETE FROM plan_tasks 
-      WHERE id = $1;
+      DELETE FROM plan_tasks pt
+      USING plan_stages ps, dreams d
+      WHERE pt.id = $1 AND pt.stage_id = ps.id
+        AND ps.dream_id = d.id AND d.user_id = $2;
     `;
-    await pool.query(query, [id]);
+    const result = await pool.query(query, [id, userId]);
+    return result.rowCount !== 0;
   }
 }

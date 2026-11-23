@@ -1,8 +1,7 @@
 import { Response } from "express";
 
-import { AuthRequest } from "../middleware/tempAuth";
+import { AuthRequest } from "../middleware/auth";
 import { PlanStageModel, PlanTaskModel, DreamModel } from "../models";
-import database from "../models/database";
 
 export class PlanController {
   // --- ЭТАПЫ (STAGES) ---
@@ -11,8 +10,8 @@ export class PlanController {
     try {
       const dreamId = req.params.dreamId as string;
       // Проверяем, что мечта принадлежит пользователю
-      const dream = await DreamModel.findById(dreamId);
-      if (!dream || dream.user_id !== req.user!.id) {
+      const dream = await DreamModel.findByIdForUser(dreamId, req.user!.id);
+      if (!dream) {
         res.status(404).json({ message: "Мечта не найдена" });
         return;
       }
@@ -30,7 +29,11 @@ export class PlanController {
     try {
       const stageId = req.params.id as string;
       const { title, status, progress } = req.body;
-      const updated = await PlanStageModel.updateById(stageId, { title, status, progress });
+      const updated = await PlanStageModel.updateById(stageId, req.user!.id, {
+        title,
+        status,
+        progress,
+      });
 
       if (!updated) {
         res.status(404).json({ message: "Этап не найден" });
@@ -46,7 +49,11 @@ export class PlanController {
   static async deleteStage(req: AuthRequest, res: Response) {
     try {
       const stageId = req.params.id as string;
-      await PlanStageModel.deleteById(stageId);
+      const deleted = await PlanStageModel.deleteById(stageId, req.user!.id);
+      if (!deleted) {
+        res.status(404).json({ message: "Этап не найден" });
+        return;
+      }
       res.status(204).send();
     } catch (error) {
       console.error(error);
@@ -59,6 +66,11 @@ export class PlanController {
   static async createTask(req: AuthRequest, res: Response) {
     try {
       const stageId = req.params.stageId as string;
+      const stage = await PlanStageModel.findByIdForUser(stageId, req.user!.id);
+      if (!stage) {
+        res.status(404).json({ message: "Этап не найден" });
+        return;
+      }
       const { title, description, deadline, task_order, is_ai_generated } = req.body;
 
       const task = await PlanTaskModel.create(
@@ -81,13 +93,16 @@ export class PlanController {
       const taskId = req.params.id as string;
       const { is_completed } = req.body;
 
-      await PlanTaskModel.toggleComplete(taskId, is_completed);
-
-      // Возвращаем обновленную задачу
-      const query = `SELECT * FROM plan_tasks WHERE id = $1;`;
-      const result = await database.query(query, [taskId]);
-
-      res.status(200).json(result.rows[0]);
+      if (typeof is_completed !== "boolean") {
+        res.status(400).json({ message: "is_completed должно быть boolean" });
+        return;
+      }
+      const updated = await PlanTaskModel.toggleComplete(taskId, req.user!.id, is_completed);
+      if (!updated) {
+        res.status(404).json({ message: "Задача не найдена" });
+        return;
+      }
+      res.status(200).json(updated);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ошибка при обновлении задачи" });
@@ -97,7 +112,11 @@ export class PlanController {
   static async deleteTask(req: AuthRequest, res: Response) {
     try {
       const taskId = req.params.id as string;
-      await PlanTaskModel.deleteById(taskId);
+      const deleted = await PlanTaskModel.deleteById(taskId, req.user!.id);
+      if (!deleted) {
+        res.status(404).json({ message: "Задача не найдена" });
+        return;
+      }
       res.status(204).send();
     } catch (error) {
       console.error(error);
