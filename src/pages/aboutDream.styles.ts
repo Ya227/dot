@@ -87,6 +87,24 @@ export const DreamHeaderLabel = styled.p`
 export const DreamHeaderNavWrapper = styled.div`
   max-width: 1200px;
   margin: 1.5rem auto 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+export const PlanActionButton = styled.button`
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--purple);
+  border-radius: 0.65rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  padding: 0.65rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--lavender);
+  }
 `;
 
 export const DreamTabs = styled.nav`

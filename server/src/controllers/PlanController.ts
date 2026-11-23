@@ -109,6 +109,33 @@ export class PlanController {
     }
   }
 
+  static async updateTask(req: AuthRequest, res: Response) {
+    try {
+      const taskId = req.params.id as string;
+      const allowed = ["title", "description", "deadline", "is_completed", "task_order"];
+      const data: Record<string, unknown> = {};
+      for (const field of allowed) {
+        if (Object.prototype.hasOwnProperty.call(req.body, field)) data[field] = req.body[field];
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(data, "is_completed") &&
+        typeof data.is_completed !== "boolean"
+      ) {
+        res.status(400).json({ message: "is_completed должно быть boolean" });
+        return;
+      }
+      const updated = await PlanTaskModel.updateById(taskId, req.user!.id, data);
+      if (!updated) {
+        res.status(404).json({ message: "Задача не найдена" });
+        return;
+      }
+      res.status(200).json(updated);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Ошибка при обновлении задачи" });
+    }
+  }
+
   static async deleteTask(req: AuthRequest, res: Response) {
     try {
       const taskId = req.params.id as string;

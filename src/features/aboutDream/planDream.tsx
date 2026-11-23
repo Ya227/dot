@@ -1,193 +1,161 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as S from "./planDream.styles";
-
-export interface PlanStep {
-  id: string;
-  dayOfWeek: string;
-  dayNumber: number;
-  title: string;
-  duration: string;
-  category: string;
-  status: "completed" | "in_progress" | "pending";
-  movedByAi?: boolean;
-}
-
-const initialStepsMock: PlanStep[] = [
-  {
-    id: "s1",
-    dayOfWeek: "MON",
-    dayNumber: 19,
-    title: "Review 20 travel phrases",
-    duration: "15 min",
-    category: "Vocabulary",
-    status: "completed",
-  },
-  {
-    id: "s2",
-    dayOfWeek: "TUE",
-    dayNumber: 20,
-    title: "Speaking practice",
-    duration: "20 min",
-    category: "Conversation",
-    status: "completed",
-  },
-  {
-    id: "s3",
-    dayOfWeek: "WED",
-    dayNumber: 21,
-    title: "Watch an episode",
-    duration: "25 min",
-    category: "Listening",
-    status: "in_progress",
-  },
-  {
-    id: "s4",
-    dayOfWeek: "THU",
-    dayNumber: 22,
-    title: "Read Chapter 1",
-    duration: "20 min",
-    category: "Reading",
-    status: "pending",
-    movedByAi: true,
-  },
-  {
-    id: "s5",
-    dayOfWeek: "SAT",
-    dayNumber: 24,
-    title: "Weekly reflection",
-    duration: "15 min",
-    category: "Review",
-    status: "pending",
-  },
-];
+import {
+  PlanStage,
+  useUpdateDreamMutation,
+  useUpdateStageMutation,
+  useUpdateTaskMutation,
+} from "../../services/dreamsApi";
 
 interface PlanDreamProps {
+  dreamId: string;
+  stages: PlanStage[];
   onProgressChange: (percentage: number) => void;
 }
 
-export const PlanDream: React.FC<PlanDreamProps> = ({ onProgressChange }) => {
-  const [steps, setSteps] = useState<PlanStep[]>(initialStepsMock);
+export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverStages, onProgressChange }) => {
+  const [stages, setStages] = useState(serverStages);
+  const [openStages, setOpenStages] = useState<Set<string>>(new Set(serverStages.map((stage) => stage.id)));
+  const [updateTask] = useUpdateTaskMutation();
+  const [updateStage] = useUpdateStageMutation();
+  const [updateDream] = useUpdateDreamMutation();
 
-  const handleCheckboxClick = (clickedId: string) => {
-    const updatedSteps = steps.map((step): PlanStep => {
-      if (step.id === clickedId) {
-        return {
-          ...step,
-          status: step.status === "completed" ? "pending" : "completed",
-        };
-      }
-      return step;
-    });
+  useEffect(() => setStages(serverStages), [serverStages]);
 
-    const firstUncompletedIndex = updatedSteps.findIndex((step) => step.status !== "completed");
+  const allTasks = stages.flatMap((stage) => stage.tasks);
+  const completedCount = allTasks.filter((task) => task.is_completed).length;
+  const totalCount = allTasks.length;
+  const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const completedStages = stages.filter((stage) => {
+    const tasks = stage.tasks;
+    return tasks.length > 0 && tasks.every((task) => task.is_completed);
+  }).length;
 
-    const finalSteps = updatedSteps.map((step, index): PlanStep => {
-      if (firstUncompletedIndex === -1) {
-        return step;
-      }
-      if (index < firstUncompletedIndex) {
-        return { ...step, status: "completed" };
-      }
-      if (index === firstUncompletedIndex) {
-        return { ...step, status: "in_progress" };
-      }
-      return { ...step, status: "pending" };
-    });
+  useEffect(() => onProgressChange(progressPercentage), [progressPercentage, onProgressChange]);
 
-    setSteps(finalSteps);
+  const toggleTask = async (stage: PlanStage, taskId: string) => {
+    const task = stage.tasks.find((item) => item.id === taskId);
+    if (!task) return;
+    const isCompleted = !task.is_completed;
+    await updateTask({ id: taskId, dreamId, is_completed: isCompleted }).unwrap();
 
-    const completedCount = finalSteps.filter((s) => s.status === "completed").length;
-    const totalCount = finalSteps.length;
-    const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    const nextStages = stages.map((item) =>
+      item.id === stage.id
+        ? {
+            ...item,
+            tasks: item.tasks.map((entry) => (entry.id === taskId ? { ...entry, is_completed: isCompleted } : entry)),
+          }
+        : item,
+    );
+    setStages(nextStages);
 
-    onProgressChange(progressPercentage);
+    const nextTasks = nextStages.flatMap((item) => item.tasks);
+    const nextCompleted = nextTasks.filter((item) => item.is_completed).length;
+    const nextProgress = nextTasks.length ? Math.round((nextCompleted / nextTasks.length) * 100) : 0;
+
+    const changedStage = nextStages.find((item) => item.id === stage.id);
+    if (changedStage) {
+      const stageCompleted = changedStage.tasks.length > 0 && changedStage.tasks.every((item) => item.is_completed);
+      const stageProgress = changedStage.tasks.length
+        ? Math.round((changedStage.tasks.filter((item) => item.is_completed).length / changedStage.tasks.length) * 100)
+        : 0;
+      await updateStage({
+        id: changedStage.id,
+        dreamId,
+        title: changedStage.title,
+        status: stageCompleted ? "completed" : stageProgress > 0 ? "in_progress" : "pending",
+        progress: stageProgress,
+      }).unwrap();
+    }
+    await updateDream({ id: dreamId, progress: nextProgress }).unwrap();
   };
 
-  const completedCount = steps.filter((s) => s.status === "completed").length;
-  const totalCount = steps.length;
-  const progressPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-
-  const progressDeg = (progressPercentage / 100) * 360;
+  const formatDeadline = (deadline: string | null) => {
+    if (!deadline) return "";
+    const date = new Date(`${deadline.slice(0, 10)}T12:00:00`);
+    return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short" }).format(date);
+  };
 
   return (
     <S.PlanSection>
       <S.PlanSectionHeader>
         <div>
-          <S.PlanSectionSubtitle>Ваш план</S.PlanSectionSubtitle>
-          <S.PlanSectionTitle>This week</S.PlanSectionTitle>
+          <S.PlanSectionSubtitle>План мечты</S.PlanSectionSubtitle>
+          <S.PlanSectionTitle>Этапы и задачи</S.PlanSectionTitle>
         </div>
-
-        <S.WeeklyWidget>
-          <S.ProgressCircle
-            $progressDeg={progressDeg}
-            aria-label={`Progress ${progressPercentage}%`}
-          >
-            <S.ProgressInner>{progressPercentage}%</S.ProgressInner>
-          </S.ProgressCircle>
-
-          <S.WeeklyWidgetInfo>
-            <S.WeeklyWidgetCounter>
-              {completedCount} of {totalCount}
-            </S.WeeklyWidgetCounter>
-            <S.WeeklyWidgetLabel>шагов</S.WeeklyWidgetLabel>
-          </S.WeeklyWidgetInfo>
-        </S.WeeklyWidget>
       </S.PlanSectionHeader>
 
-      <S.StepsContainer>
-        {steps.map((step) => {
-          const isCompleted = step.status === "completed";
-          const isInProgress = step.status === "in_progress";
+      {stages.length > 0 && (
+        <S.PlanSummary>
+          <div>
+            <S.SummaryLabel>Общий прогресс мечты</S.SummaryLabel>
+            <S.SummaryValue>{progressPercentage}%</S.SummaryValue>
+            <S.SummaryProgressTrack>
+              <S.SummaryProgressFill width={progressPercentage} />
+            </S.SummaryProgressTrack>
+          </div>
+          <S.SummaryStat>
+            <S.SummaryStatValue>{completedStages} / {stages.length}</S.SummaryStatValue>
+            <S.SummaryLabel>Этапов пройдено</S.SummaryLabel>
+          </S.SummaryStat>
+          <S.SummaryStat>
+            <S.SummaryStatValue>{completedCount} / {totalCount}</S.SummaryStatValue>
+            <S.SummaryLabel>Задач выполнено</S.SummaryLabel>
+          </S.SummaryStat>
+        </S.PlanSummary>
+      )}
 
-          return (
-            <S.StepCard key={step.id} status={step.status}>
-              <S.StepCardLeft>
-                <S.StepCardDate>
-                  <S.StepCardDayName>{step.dayOfWeek}</S.StepCardDayName>
-                  <S.StepCardDayNumber>{step.dayNumber}</S.StepCardDayNumber>
-                </S.StepCardDate>
-
-                <S.StepCardStatusWrapper
-                  onClick={() => handleCheckboxClick(step.id)}
-                  style={{ cursor: "pointer" }}
+      {stages.length === 0 ? (
+        <S.EmptyPlan>Для этой мечты пока нет плана.</S.EmptyPlan>
+      ) : (
+        <S.StepsContainer>
+          {stages.map((stage, stageIndex) => {
+            const stageCompleted = stage.tasks.filter((task) => task.is_completed).length;
+            const stageProgress = stage.tasks.length
+              ? Math.round((stageCompleted / stage.tasks.length) * 100)
+              : 0;
+            const isOpen = openStages.has(stage.id);
+            return (
+              <S.StageCard key={stage.id} $open={isOpen}>
+                <S.StageHeader
+                  type="button"
+                  onClick={() =>
+                    setOpenStages((current) => {
+                      const next = new Set(current);
+                      next.has(stage.id) ? next.delete(stage.id) : next.add(stage.id);
+                      return next;
+                    })
+                  }
                 >
-                  {isCompleted ? (
-                    <S.StatusBadge variant="completed">✓</S.StatusBadge>
-                  ) : isInProgress ? (
-                    <S.StatusBadge variant="progress">
-                      <S.StatusBadgePulseDot />
-                    </S.StatusBadge>
-                  ) : (
-                    <S.StatusBadge variant="pending" />
-                  )}
-                </S.StepCardStatusWrapper>
-
-                <S.StepCardDetails>
-                  <S.StepCardTitleRow>
-                    <S.StepCardTitle
-                      style={{
-                        textDecoration: isCompleted ? "line-through" : "none",
-                        opacity: isCompleted ? 0.6 : 1,
-                      }}
-                    >
-                      {step.title}
-                    </S.StepCardTitle>
-                    {step.movedByAi && <S.AiTag>✨ Использовать Ии</S.AiTag>}
-                  </S.StepCardTitleRow>
-                  <S.StepCardMeta>
-                    {step.duration} • <S.StepCardCategory>{step.category}</S.StepCardCategory>
-                  </S.StepCardMeta>
-                </S.StepCardDetails>
-              </S.StepCardLeft>
-            </S.StepCard>
-          );
-        })}
-      </S.StepsContainer>
-
-      <S.PlanSectionFooter>
-        <span>✨ План в вашем темпе</span>
-      </S.PlanSectionFooter>
+                  <span>{isOpen ? "⌄" : "›"}</span>
+                  <S.StageTitle>{stageIndex + 1}. {stage.title}</S.StageTitle>
+                  {stageProgress === 100 && <S.StageBadge $completed>Выполнено</S.StageBadge>}
+                  {stage.tasks.length > 0 && <S.StageProgress>{stageProgress}%</S.StageProgress>}
+                </S.StageHeader>
+                {isOpen && (
+                  <S.StageTasks>
+                    {stage.tasks.map((task) => (
+                      <S.TaskRow key={task.id}>
+                        <S.TaskCheckbox
+                          type="checkbox"
+                          checked={task.is_completed}
+                          onChange={() => void toggleTask(stage, task.id)}
+                        />
+                        <S.TaskTitle $completed={task.is_completed}>
+                          {task.title}
+                          {task.is_ai_generated && "  ИИ"}
+                        </S.TaskTitle>
+                        <S.TaskDeadline>{formatDeadline(task.deadline)}</S.TaskDeadline>
+                      </S.TaskRow>
+                    ))}
+                  </S.StageTasks>
+                )}
+              </S.StageCard>
+            );
+          })}
+        </S.StepsContainer>
+      )}
     </S.PlanSection>
   );
 };

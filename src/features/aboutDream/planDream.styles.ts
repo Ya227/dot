@@ -254,3 +254,200 @@ export const PlanSectionFooter = styled.div`
   font-size: 0.75rem;
   color: var(--muted);
 `;
+
+export const PlanSummary = styled.div`
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) repeat(3, auto);
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--page);
+`;
+
+export const SummaryLabel = styled.p`
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+`;
+
+export const SummaryValue = styled.div`
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--violet);
+`;
+
+export const SummaryProgressTrack = styled.div`
+  height: 8px;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: var(--lavender);
+  overflow: hidden;
+`;
+
+export const SummaryProgressFill = styled.div<{ width: number }>`
+  height: 100%;
+  width: ${(props) => props.width}%;
+  border-radius: inherit;
+  background: var(--purple);
+`;
+
+export const SummaryStat = styled.div`
+  min-width: 90px;
+  text-align: center;
+`;
+
+export const SummaryStatValue = styled.div`
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+`;
+
+export const StageCard = styled.section<{ $open: boolean }>`
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--page);
+  overflow: hidden;
+`;
+
+export const StageHeader = styled.button`
+  width: 100%;
+  min-height: 68px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+`;
+
+export const StageTitle = styled.span`
+  font-weight: 750;
+`;
+
+export const StageBadge = styled.span<{ $completed?: boolean }>`
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  color: ${(props) => (props.$completed ? "#16866f" : "var(--purple-dark)")};
+  background: ${(props) => (props.$completed ? "#dff6ef" : "var(--lavender)")};
+  font-size: 0.75rem;
+  font-weight: 700;
+`;
+
+export const StageProgress = styled.span`
+  color: var(--purple);
+  font-weight: 800;
+`;
+
+export const StageTasks = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+`;
+
+export const TaskRow = styled.label`
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 52px;
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+`;
+
+export const TaskCheckbox = styled.input`
+  width: 18px;
+  height: 18px;
+  accent-color: var(--purple);
+`;
+
+export const TaskTitle = styled.span<{ $completed?: boolean }>`
+  color: var(--ink);
+  font-size: 0.9rem;
+  ${(props) => props.$completed && `text-decoration: line-through; color: var(--muted);`}
+`;
+
+export const TaskDeadline = styled.span`
+  color: var(--muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+`;
+
+export const EmptyPlan = styled.div`
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(35, 32, 52, 0.35);
+`;
+
+export const Modal = styled.div`
+  width: min(720px, 100%);
+  max-height: calc(100vh - 3rem);
+  overflow: auto;
+  border-radius: 1.25rem;
+  background: var(--page);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 70px rgba(35, 32, 52, 0.24);
+  padding: 1.5rem;
+`;
+
+export const ModalTitle = styled.h2`
+  margin: 0 0 1.25rem;
+  color: var(--violet);
+`;
+
+export const DraftStage = styled.div`
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+`;
+
+export const DraftRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 140px 18px auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+`;
+
+export const DraftInput = styled.input`
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface);
+  color: var(--ink);
+`;
+
+export const DraftButton = styled.button`
+  border: 1px solid var(--purple);
+  border-radius: 0.55rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  padding: 0.55rem 0.75rem;
+  cursor: pointer;
+`;
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+`;

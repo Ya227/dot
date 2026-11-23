@@ -12,7 +12,7 @@ router.delete("/stages/:id", authenticate, PlanController.deleteStage);
 
 // Маршруты для задач (привязаны к конкретному этапу или независимы по ID)
 router.post("/stages/:stageId/tasks", authenticate, PlanController.createTask);
-router.patch("/tasks/:id", authenticate, PlanController.toggleTask);
+router.patch("/tasks/:id", authenticate, PlanController.updateTask);
 router.delete("/tasks/:id", authenticate, PlanController.deleteTask);
 
 export default router;

@@ -96,11 +96,12 @@ function Dashboard() {
               dreams.map((dream) => (
                 <DreamCard
                   key={dream.id}
+                  dreamId={dream.id}
                   imageSrc={dream.image_url || im1}
                   title={dream.title}
                   progress={dream.progress}
                   targetDate={formatTargetDate(dream.target_date)}
-                  onContinueChat={() => navigate("/aboutDream")}
+                  onContinueChat={() => navigate(`/aboutDream/${dream.id}`)}
                 />
               ))
             )}

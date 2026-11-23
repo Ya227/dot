@@ -65,6 +65,38 @@ export class PlanTaskModel {
     return result.rows[0];
   }
 
+  static async updateById(
+    id: string,
+    userId: string,
+    data: Partial<Pick<IPlanTask, "title" | "description" | "deadline" | "is_completed" | "task_order">>,
+  ): Promise<IPlanTask | undefined> {
+    const fields = ["title", "description", "deadline", "is_completed", "task_order"] as const;
+    const values: unknown[] = [];
+    const setters = fields.flatMap((field) => {
+      if (!Object.prototype.hasOwnProperty.call(data, field) || data[field] === undefined) {
+        return [];
+      }
+      values.push(data[field]);
+      return [`${field} = $${values.length}`];
+    });
+
+    if (setters.length === 0) return this.toggleComplete(id, userId, false);
+
+    values.push(id, userId);
+    const query = `
+      UPDATE plan_tasks pt
+      SET ${setters.join(", ")}, updated_at = CURRENT_TIMESTAMP
+      FROM plan_stages ps
+      JOIN dreams d ON d.id = ps.dream_id
+      WHERE pt.id = $${values.length - 1}
+        AND pt.stage_id = ps.id
+        AND d.user_id = $${values.length}
+      RETURNING pt.*;
+    `;
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  }
+
   static async deleteById(id: string, userId: string): Promise<boolean> {
     const query = `
       DELETE FROM plan_tasks pt

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import * as S from "./dreamCard.styles";
 
 export interface DreamCardProps {
+  dreamId: string;
   imageSrc: string;
   title: string;
   progress: number;
@@ -13,6 +14,7 @@ export interface DreamCardProps {
 }
 
 export const DreamCard: React.FC<DreamCardProps> = ({
+  dreamId,
   imageSrc,
   title,
   progress,
@@ -22,7 +24,7 @@ export const DreamCard: React.FC<DreamCardProps> = ({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    navigate("/aboutDream");
+    navigate(`/aboutDream/${dreamId}`);
   };
   return (
     <S.CardContainer onClick={handleCardClick} style={{ cursor: "pointer" }}>
