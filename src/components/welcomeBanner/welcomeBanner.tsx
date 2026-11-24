@@ -62,7 +62,7 @@ const formatActiveDreamsPhrase = (count: number): { prefix: string; highlight: s
 
 export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
   date = getDefaultFormattedDate(),
-  username = "Яна",
+  username = "пользователь",
   activeDreamsCount = 0,
   onNewDreamClick,
 }) => {
