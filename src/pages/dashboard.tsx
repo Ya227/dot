@@ -3,11 +3,12 @@ import React from "react";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 
-import im1 from "../../public/CatsCafe.jpg";
+import im1 from "../../public/default.jpg";
 import { WelcomeBanner } from "../components/welcomeBanner/welcomeBanner";
 import { DreamCard } from "../features/dreamCard/dreamCard";
 import { StreakCard } from "../features/streakCard/streakCard";
 import { WeekProgress } from "../features/weekProgress/weekProgress";
+import { useGetMeQuery } from "../services/authApi";
 import { getApiErrorMessage, useGetDreamsQuery } from "../services/dreamsApi";
 
 const PageContainer = styled.div`
@@ -69,12 +70,15 @@ const formatTargetDate = (targetDate: string | null): string => {
 
 function Dashboard() {
   const navigate = useNavigate();
+  const { data: user } = useGetMeQuery(undefined, { refetchOnMountOrArgChange: true });
   const { data: dreams = [], isLoading, error } = useGetDreamsQuery();
   const loadError = getApiErrorMessage(error, "Не удалось загрузить список мечт");
+  const username = user?.first_name?.trim() || user?.email.split("@")[0] || "пользователь";
 
   return (
     <PageContainer>
       <WelcomeBanner
+        username={username}
         activeDreamsCount={dreams.length}
         onNewDreamClick={() => navigate("/dreamform")}
       />
