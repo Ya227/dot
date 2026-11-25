@@ -43,60 +43,34 @@ const COLOR_PRESETS = [
   "#D1C4E9",
 ];
 
-export const DashboardDream: React.FC = () => {
+interface DashboardDreamProps {
+  dreamId: string;
+}
+
+export const DashboardDream: React.FC<DashboardDreamProps> = ({ dreamId }) => {
   const [activeSettingsId, setActiveSettingsId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"color" | "bgColor" | "shape">("color");
-  const [items, setItems] = useState<BoardItem[]>([
-    {
-      id: "i1",
-      type: "sticker",
-      title: "— Federico Fellini",
-      content: "“A different language is a different vision of life.”",
-      x: 54,
-      y: 54,
-      width: 270,
-      height: 205,
-      color: "#FFF5D9",
-      textColor: "#34312D",
-      shape: "none",
-    },
-    {
-      id: "i2",
-      type: "photo",
-      content: "",
-      x: 370,
-      y: 65,
-      width: 300,
-      height: 230,
-      shape: "rectangle",
-      color: "#EFEFEF",
-    },
-    {
-      id: "i3",
-      type: "sticker",
-      content: "Open sketchbook on a warm desk",
-      x: 105,
-      y: 340,
-      width: 250,
-      height: 155,
-      color: "transparent",
-      textColor: "#34312D",
-      shape: "none",
-    },
-    {
-      id: "i4",
-      type: "sticker",
-      title: "My why",
-      content: "Connect freely, travel slowly, and feel at home anywhere.",
-      x: 700,
-      y: 360,
-      width: 285,
-      height: 190,
-      color: "#EDE8FA",
-      textColor: "#34312D",
-      shape: "none",
-    },
-  ]);
+  const initialItems: BoardItem[] = [
+    { id: "i1", type: "sticker", title: "— Federico Fellini", content: "“A different language is a different vision of life.”", x: 54, y: 54, width: 270, height: 205, color: "#FFF5D9", textColor: "#34312D", shape: "none" },
+    { id: "i2", type: "photo", content: "", x: 370, y: 65, width: 300, height: 230, shape: "rectangle", color: "#EFEFEF" },
+    { id: "i3", type: "sticker", content: "Open sketchbook on a warm desk", x: 105, y: 340, width: 250, height: 155, color: "transparent", textColor: "#34312D", shape: "none" },
+    { id: "i4", type: "sticker", title: "My why", content: "Connect freely, travel slowly, and feel at home anywhere.", x: 700, y: 360, width: 285, height: 190, color: "#EDE8FA", textColor: "#34312D", shape: "none" },
+  ];
+  const [items, setItems] = useState<BoardItem[]>(() => {
+    if (typeof window === "undefined") return initialItems;
+    try {
+      const saved = window.localStorage.getItem(`dot.dreamBoard.${dreamId}`);
+      return saved ? (JSON.parse(saved) as BoardItem[]) : initialItems;
+    } catch {
+      return initialItems;
+    }
+  });
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(`dot.dreamBoard.${dreamId}`, JSON.stringify(items));
+    }
+  }, [dreamId, items]);
 
   const boardRef = useRef<HTMLDivElement>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);

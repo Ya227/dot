@@ -8,11 +8,53 @@ export interface Dream {
   progress: number;
 }
 
+export interface PlanTask {
+  id: string;
+  stage_id: string;
+  title: string;
+  description: string | null;
+  is_completed: boolean;
+  is_ai_generated: boolean;
+  deadline: string | null;
+  task_order: number;
+}
+
+export interface PlanStage {
+  id: string;
+  dream_id: string;
+  title: string;
+  stage_order: number;
+  status: string;
+  progress: number;
+  tasks: PlanTask[];
+}
+
+export interface DreamDetails extends Dream {
+  description: string | null;
+  dream_status: string;
+  plan_status: string;
+  stages: PlanStage[];
+}
+
 export interface CreateDreamInput {
   title: string;
   description: string;
   target_date: string;
   image_url: string | null;
+}
+
+export interface PlanDraftTask {
+  id?: string;
+  title: string;
+  deadline: string;
+  is_ai_generated: boolean;
+  is_completed?: boolean;
+}
+
+export interface PlanDraftStage {
+  id?: string;
+  title: string;
+  tasks: PlanDraftTask[];
 }
 
 export const getApiErrorMessage = (error: unknown, fallback: string): string => {
@@ -68,7 +110,7 @@ export const dreamsApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Dream"],
+  tagTypes: ["Dream", "Plan"],
   keepUnusedDataFor: 60,
   endpoints: (builder) => ({
     getDreams: builder.query<Dream[], void>({
@@ -87,6 +129,13 @@ export const dreamsApi = createApi({
             ]
           : [{ type: "Dream" as const, id: "LIST" }],
     }),
+    getDream: builder.query<DreamDetails, string>({
+      query: (id) => `dreams/${id}`,
+      providesTags: (_dream, _error, id) => [
+        { type: "Dream", id },
+        { type: "Plan", id },
+      ],
+    }),
     createDream: builder.mutation<Dream, CreateDreamInput>({
       query: (body) => ({
         url: "dreams",
@@ -95,7 +144,70 @@ export const dreamsApi = createApi({
       }),
       invalidatesTags: [{ type: "Dream", id: "LIST" }],
     }),
+    updateDream: builder.mutation<Dream, { id: string; progress?: number }>({
+      query: ({ id, ...body }) => ({
+        url: `dreams/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Dream", id },
+        { type: "Dream", id: "LIST" },
+        { type: "Plan", id },
+      ],
+    }),
+    createStage: builder.mutation<PlanStage, { dreamId: string; title: string; stage_order: number }>({
+      query: ({ dreamId, title, stage_order }) => ({
+        url: `dreams/${dreamId}/stages`,
+        method: "POST",
+        body: { title, stage_order },
+      }),
+    }),
+    updateStage: builder.mutation<PlanStage, { id: string; dreamId: string; title: string; status?: string; progress?: number }>({
+      query: ({ id, title, status, progress }) => ({
+        url: `stages/${id}`,
+        method: "PUT",
+        body: { title, status, progress },
+      }),
+    }),
+    deleteStage: builder.mutation<void, { id: string; dreamId: string }>({
+      query: ({ id }) => ({
+        url: `stages/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    createTask: builder.mutation<PlanTask, { stageId: string; dreamId: string; title: string; deadline: string; task_order: number; is_ai_generated: boolean }>({
+      query: ({ stageId, title, deadline, task_order, is_ai_generated }) => ({
+        url: `stages/${stageId}/tasks`,
+        method: "POST",
+        body: { title, deadline: deadline || null, task_order, is_ai_generated },
+      }),
+    }),
+    updateTask: builder.mutation<PlanTask, { id: string; dreamId: string; title?: string; deadline?: string | null; is_completed?: boolean }>({
+      query: ({ id, title, deadline, is_completed }) => ({
+        url: `tasks/${id}`,
+        method: "PATCH",
+        body: { title, deadline, is_completed },
+      }),
+    }),
+    deleteTask: builder.mutation<void, { id: string; dreamId: string }>({
+      query: ({ id }) => ({
+        url: `tasks/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
-export const { useGetDreamsQuery, useCreateDreamMutation } = dreamsApi;
+export const {
+  useGetDreamsQuery,
+  useGetDreamQuery,
+  useCreateDreamMutation,
+  useUpdateDreamMutation,
+  useCreateStageMutation,
+  useUpdateStageMutation,
+  useDeleteStageMutation,
+  useCreateTaskMutation,
+  useUpdateTaskMutation,
+  useDeleteTaskMutation,
+} = dreamsApi;

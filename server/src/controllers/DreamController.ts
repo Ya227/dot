@@ -1,7 +1,7 @@
 import { Response } from "express";
 
 import { AuthRequest } from "../middleware/auth";
-import { DreamModel, PlanStageModel, PlanTaskModel } from "../models";
+import { DreamModel } from "../models";
 
 export class DreamController {
   // Список мечт для карточек дашборда
@@ -19,18 +19,13 @@ export class DreamController {
   static async getDreamById(req: AuthRequest, res: Response) {
     try {
       const dreamID = req.params.id as string;
-      const dream = await DreamModel.findByIdForUser(dreamID, req.user!.id);
+      const dream = await DreamModel.findByIdWithPlanForUser(dreamID, req.user!.id);
       if (!dream) {
         res.status(404).json({ message: "Мечта не найдена" });
         return;
       }
 
-      const stages = await PlanStageModel.findByDreamId(dream.id);
-      for (const stage of stages) {
-        stage.tasks = await PlanTaskModel.findByStageId(stage.id);
-      }
-      // TODO: позже заменим 1+N запросов на один SQL с JSON_AGG
-      res.status(200).json({ ...dream, stages });
+      res.status(200).json(dream);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ошибка при получении мечты" });

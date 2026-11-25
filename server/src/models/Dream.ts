@@ -1,4 +1,10 @@
 import pool from "./database";
+import { IPlanStage } from "./PlanStage";
+import { IPlanTask } from "./PlanTask";
+
+type DreamWithPlan = IDream & {
+  stages: Array<IPlanStage & { tasks: IPlanTask[] }>;
+};
 
 export interface IDream {
   id: string;
@@ -74,6 +80,34 @@ export class DreamModel {
     const query = `
       SELECT * FROM dreams
       WHERE id = $1 AND user_id = $2;
+    `;
+    const result = await pool.query(query, [id, userId]);
+    return result.rows[0];
+  }
+
+  static async findByIdWithPlanForUser(
+    id: string,
+    userId: string,
+  ): Promise<DreamWithPlan | undefined> {
+    const query = `
+      SELECT d.*,
+        COALESCE((
+          SELECT jsonb_agg(
+            to_jsonb(ps) || jsonb_build_object(
+              'tasks',
+              COALESCE((
+                SELECT jsonb_agg(to_jsonb(pt) ORDER BY pt.task_order)
+                FROM plan_tasks pt
+                WHERE pt.stage_id = ps.id
+              ), '[]'::jsonb)
+            )
+            ORDER BY ps.stage_order
+          )
+          FROM plan_stages ps
+          WHERE ps.dream_id = d.id
+        ), '[]'::jsonb) AS stages
+      FROM dreams d
+      WHERE d.id = $1 AND d.user_id = $2;
     `;
     const result = await pool.query(query, [id, userId]);
     return result.rows[0];

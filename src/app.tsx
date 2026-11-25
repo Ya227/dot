@@ -35,7 +35,7 @@ export const App = () => {
           <Route path="/habits" element={<Habits />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/dreamform" element={<FormDreams />} />
-          <Route path="/aboutDream" element={<AboutDream />} />
+          <Route path="/aboutDream/:id" element={<AboutDream />} />
         </Route>
 
         <Route element={<BlankLayout />}>
