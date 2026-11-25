@@ -435,28 +435,38 @@ export const ModalTitle = styled.h2`
 `;
 
 export const DraftStage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1rem;
-  margin-bottom: 1rem;
 `;
 
 export const DraftRow = styled.div`
   display: grid;
-  grid-template-columns: minmax(160px, 1fr) 140px 18px auto;
+  grid-template-columns: minmax(0, 1fr) 160px 44px;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
   margin-top: 0.65rem;
 `;
 
 export const DraftInput = styled.input`
   width: 100%;
+  height: 44px;
+  padding: 0 1rem;
   box-sizing: border-box;
   border: 1px solid var(--border);
   border-radius: 0.55rem;
   padding: 0.65rem 0.75rem;
   background: var(--surface);
   color: var(--ink);
+
+  &:focus {
+    outline: none;
+    border-color: var(--purple);
+  }
 `;
 
 export const DraftButton = styled.button`
@@ -474,6 +484,30 @@ export const DraftButton = styled.button`
   cursor: pointer;
 `;
 
+export const DraftRemoveButton = styled.button`
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--purple);
+    background: var(--lavender);
+  }
+`;
+
 export const ModalActions = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -489,6 +523,9 @@ export const DraftStageHeader = styled.div`
 `;
 
 export const DraftStageNumber = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--purple-dark);
@@ -496,6 +533,9 @@ export const DraftStageNumber = styled.span`
 `;
 
 export const DraftStageTitleInput = styled(DraftInput)`
+  width: calc(100% - 44px - 0.75rem);
+  height: 44px;
+  padding: 0 1rem;
   font-weight: 700;
   font-size: 1.02rem;
   margin-bottom: 0.35rem;

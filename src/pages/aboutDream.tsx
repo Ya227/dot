@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import * as S from "./aboutDream.styles";
 import { DashboardDream } from "../features/aboutDream/boardDream";
-import { PlanDream } from "../features/aboutDream/planDream";
 import { CreatePlanDream } from "../features/aboutDream/createPlanDream";
 import { EditPlanDream } from "../features/aboutDream/editPlanDream";
+import { PlanDream } from "../features/aboutDream/planDream";
 import { useGetDreamQuery, useGetDreamsQuery } from "../services/dreamsApi";
 
 type TabType = "План" | "Доска" | "Ресурсы" | "Чат";
@@ -13,9 +14,10 @@ type TabType = "План" | "Доска" | "Ресурсы" | "Чат";
 export const AboutDream: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: dreams = [] } = useGetDreamsQuery();
+  const { data: dreams = [] } = useGetDreamsQuery(undefined, { skip: Boolean(id) });
   const [resolvedId, setResolvedId] = useState(id);
-  const { data: dream, isLoading, error } = useGetDreamQuery(resolvedId || "", { skip: !resolvedId });
+  const dreamId = id || resolvedId;
+  const { data: dream, isLoading, error } = useGetDreamQuery(dreamId || "", { skip: !dreamId });
   const [activeTab, setActiveTab] = useState<TabType>("План");
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [createPlanOpen, setCreatePlanOpen] = useState(false);
@@ -68,7 +70,7 @@ export const AboutDream: React.FC = () => {
               </S.DreamTabsBtn>
             ))}
           </S.DreamTabs>
-          {activeTab === "План" && resolvedId && (
+          {activeTab === "План" && dreamId && (
             <S.PlanActionButton
               type="button"
               onClick={() => (dream?.stages.length ? setEditPlanOpen(true) : setCreatePlanOpen(true))}
@@ -80,9 +82,9 @@ export const AboutDream: React.FC = () => {
       </S.DreamHeader>
 
       <S.DreamContent>
-        {activeTab === "План" && resolvedId && dream && (
+        {activeTab === "План" && dreamId && dream && (
           <PlanDream
-            dreamId={resolvedId}
+            dreamId={dreamId}
             stages={dream.stages}
             onProgressChange={setProgressPercentage}
           />
@@ -104,7 +106,7 @@ export const AboutDream: React.FC = () => {
               flexDirection: "column",
             }}
           >
-            <DashboardDream key={resolvedId} dreamId={resolvedId} />
+            <DashboardDream key={dreamId} dreamId={dreamId || ""} />
           </div>
         )}
 
@@ -115,12 +117,12 @@ export const AboutDream: React.FC = () => {
           </S.BlankTab>
         )}
       </S.DreamContent>
-      {createPlanOpen && resolvedId && (
-        <CreatePlanDream dreamId={resolvedId} onClose={() => setCreatePlanOpen(false)} />
+      {createPlanOpen && dreamId && (
+        <CreatePlanDream dreamId={dreamId} onClose={() => setCreatePlanOpen(false)} />
       )}
-      {editPlanOpen && resolvedId && dream && (
+      {editPlanOpen && dreamId && dream && (
         <EditPlanDream
-          dreamId={resolvedId}
+          dreamId={dreamId}
           stages={dream.stages}
           onClose={() => setEditPlanOpen(false)}
         />

@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 
+import { useDispatch } from "react-redux";
+
+import { PlanFormModal } from "./PlanFormModal";
 import {
+  dreamsApi,
   useCreateStageMutation,
   useCreateTaskMutation,
   PlanDraftStage,
 } from "../../services/dreamsApi";
-import { PlanFormModal } from "./PlanFormModal";
 
 interface CreatePlanDreamProps {
   dreamId: string;
@@ -17,6 +20,7 @@ const INITIAL_STAGES: PlanDraftStage[] = [
 ];
 
 export const CreatePlanDream: React.FC<CreatePlanDreamProps> = ({ dreamId, onClose }) => {
+  const dispatch = useDispatch();
   const [createStage] = useCreateStageMutation();
   const [createTask] = useCreateTaskMutation();
   const [saving, setSaving] = useState(false);
@@ -51,6 +55,7 @@ export const CreatePlanDream: React.FC<CreatePlanDreamProps> = ({ dreamId, onClo
           }).unwrap();
         }
       }
+      dispatch(dreamsApi.util.invalidateTags([{ type: "Plan", id: dreamId }]));
       onClose();
     } finally {
       setSaving(false);

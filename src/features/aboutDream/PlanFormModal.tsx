@@ -31,8 +31,8 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
   const updateTask = (
     stageIndex: number,
     taskIndex: number,
-    field: "title" | "deadline" | "is_ai_generated",
-    value: string | boolean,
+    field: "title" | "deadline",
+    value: string,
   ) => {
     setStages((current) =>
       current.map((stage, index) =>
@@ -55,12 +55,13 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
         {stages.map((stage, stageIndex) => (
           <S.DraftStage key={stage.id || stageIndex}>
             <S.DraftStageHeader>
-                <S.DraftStageNumber>Этап {stageIndex + 1}</S.DraftStageNumber>
+              <S.DraftStageNumber>Этап {stageIndex + 1}</S.DraftStageNumber>
             </S.DraftStageHeader>
+
             <S.DraftStageTitleInput
-                value={stage.title}
-                onChange={(event) => updateStageTitle(stageIndex, event.target.value)}
-                placeholder={`Название этапа ${stageIndex + 1}`}
+              value={stage.title}
+              onChange={(event) => updateStageTitle(stageIndex, event.target.value)}
+              placeholder={`Название этапа ${stageIndex + 1}`}
             />
 
             {stage.tasks.map((task, taskIndex) => (
@@ -75,15 +76,7 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
                   value={task.deadline}
                   onChange={(event) => updateTask(stageIndex, taskIndex, "deadline", event.target.value)}
                 />
-                <input
-                  type="checkbox"
-                  checked={task.is_ai_generated}
-                  onChange={(event) =>
-                    updateTask(stageIndex, taskIndex, "is_ai_generated", event.target.checked)
-                  }
-                  title="ИИ-пункт"
-                />
-                <S.DraftButton
+                <S.DraftRemoveButton
                   type="button"
                   onClick={() =>
                     setStages((current) =>
@@ -94,11 +87,13 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
                       ),
                     )
                   }
+                  title="Удалить пункт"
                 >
                   ×
-                </S.DraftButton>
+                </S.DraftRemoveButton>
               </S.DraftRow>
             ))}
+
             <S.DraftButton
               type="button"
               onClick={() =>
@@ -115,6 +110,7 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
             </S.DraftButton>
           </S.DraftStage>
         ))}
+
         <S.DraftButton
           type="button"
           onClick={() =>
@@ -126,6 +122,7 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
         >
           + Добавить этап
         </S.DraftButton>
+
         <S.ModalActions>
           <S.DraftButton type="button" onClick={onClose}>
             Отмена

@@ -162,7 +162,6 @@ export const dreamsApi = createApi({
         method: "POST",
         body: { title, stage_order },
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
     updateStage: builder.mutation<PlanStage, { id: string; dreamId: string; title: string; status?: string; progress?: number }>({
       query: ({ id, title, status, progress }) => ({
@@ -170,14 +169,12 @@ export const dreamsApi = createApi({
         method: "PUT",
         body: { title, status, progress },
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
     deleteStage: builder.mutation<void, { id: string; dreamId: string }>({
       query: ({ id }) => ({
         url: `stages/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
     createTask: builder.mutation<PlanTask, { stageId: string; dreamId: string; title: string; deadline: string; task_order: number; is_ai_generated: boolean }>({
       query: ({ stageId, title, deadline, task_order, is_ai_generated }) => ({
@@ -185,7 +182,6 @@ export const dreamsApi = createApi({
         method: "POST",
         body: { title, deadline: deadline || null, task_order, is_ai_generated },
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
     updateTask: builder.mutation<PlanTask, { id: string; dreamId: string; title?: string; deadline?: string | null; is_completed?: boolean }>({
       query: ({ id, title, deadline, is_completed }) => ({
@@ -193,14 +189,12 @@ export const dreamsApi = createApi({
         method: "PATCH",
         body: { title, deadline, is_completed },
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
     deleteTask: builder.mutation<void, { id: string; dreamId: string }>({
       query: ({ id }) => ({
         url: `tasks/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, { dreamId }) => [{ type: "Plan", id: dreamId }],
     }),
   }),
 });
