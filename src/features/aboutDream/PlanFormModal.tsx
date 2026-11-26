@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { PlanDraftStage } from "../../services/dreamsApi";
 import * as S from "./planDream.styles";
+import { PlanDraftStage } from "../../services/dreamsApi";
 
 interface PlanFormModalProps {
   title: string;
@@ -24,7 +24,9 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
 
   const updateStageTitle = (stageIndex: number, stageTitle: string) => {
     setStages((current) =>
-      current.map((stage, index) => (index === stageIndex ? { ...stage, title: stageTitle } : stage)),
+      current.map((stage, index) =>
+        index === stageIndex ? { ...stage, title: stageTitle } : stage,
+      ),
     );
   };
 
@@ -68,13 +70,17 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
               <S.DraftRow key={task.id || taskIndex}>
                 <S.DraftInput
                   value={task.title}
-                  onChange={(event) => updateTask(stageIndex, taskIndex, "title", event.target.value)}
+                  onChange={(event) =>
+                    updateTask(stageIndex, taskIndex, "title", event.target.value)
+                  }
                   placeholder="Название пункта"
                 />
                 <S.DraftInput
                   type="date"
                   value={task.deadline}
-                  onChange={(event) => updateTask(stageIndex, taskIndex, "deadline", event.target.value)}
+                  onChange={(event) =>
+                    updateTask(stageIndex, taskIndex, "deadline", event.target.value)
+                  }
                 />
                 <S.DraftRemoveButton
                   type="button"
@@ -100,7 +106,13 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
                 setStages((current) =>
                   current.map((item, index) =>
                     index === stageIndex
-                      ? { ...item, tasks: [...item.tasks, { title: "", deadline: "", is_ai_generated: false }] }
+                      ? {
+                          ...item,
+                          tasks: [
+                            ...item.tasks,
+                            { title: "", deadline: "", is_ai_generated: false },
+                          ],
+                        }
                       : item,
                   ),
                 )
@@ -116,7 +128,10 @@ export const PlanFormModal: React.FC<PlanFormModalProps> = ({
           onClick={() =>
             setStages((current) => [
               ...current,
-              { title: `Этап ${current.length + 1}`, tasks: [{ title: "", deadline: "", is_ai_generated: false }] },
+              {
+                title: `Этап ${current.length + 1}`,
+                tasks: [{ title: "", deadline: "", is_ai_generated: false }],
+              },
             ])
           }
         >

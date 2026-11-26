@@ -14,9 +14,15 @@ interface PlanDreamProps {
   onProgressChange: (percentage: number) => void;
 }
 
-export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverStages, onProgressChange }) => {
+export const PlanDream: React.FC<PlanDreamProps> = ({
+  dreamId,
+  stages: serverStages,
+  onProgressChange,
+}) => {
   const [stages, setStages] = useState(serverStages);
-  const [openStages, setOpenStages] = useState<Set<string>>(new Set(serverStages.map((stage) => stage.id)));
+  const [openStages, setOpenStages] = useState<Set<string>>(
+    new Set(serverStages.map((stage) => stage.id)),
+  );
   const [updateTask] = useUpdateTaskMutation();
   const [updateStage] = useUpdateStageMutation();
   const [updateDream] = useUpdateDreamMutation();
@@ -44,7 +50,9 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
       item.id === stage.id
         ? {
             ...item,
-            tasks: item.tasks.map((entry) => (entry.id === taskId ? { ...entry, is_completed: isCompleted } : entry)),
+            tasks: item.tasks.map((entry) =>
+              entry.id === taskId ? { ...entry, is_completed: isCompleted } : entry,
+            ),
           }
         : item,
     );
@@ -52,13 +60,20 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
 
     const nextTasks = nextStages.flatMap((item) => item.tasks);
     const nextCompleted = nextTasks.filter((item) => item.is_completed).length;
-    const nextProgress = nextTasks.length ? Math.round((nextCompleted / nextTasks.length) * 100) : 0;
+    const nextProgress = nextTasks.length
+      ? Math.round((nextCompleted / nextTasks.length) * 100)
+      : 0;
 
     const changedStage = nextStages.find((item) => item.id === stage.id);
     if (changedStage) {
-      const stageCompleted = changedStage.tasks.length > 0 && changedStage.tasks.every((item) => item.is_completed);
+      const stageCompleted =
+        changedStage.tasks.length > 0 && changedStage.tasks.every((item) => item.is_completed);
       const stageProgress = changedStage.tasks.length
-        ? Math.round((changedStage.tasks.filter((item) => item.is_completed).length / changedStage.tasks.length) * 100)
+        ? Math.round(
+            (changedStage.tasks.filter((item) => item.is_completed).length /
+              changedStage.tasks.length) *
+              100,
+          )
         : 0;
       await updateStage({
         id: changedStage.id,
@@ -96,11 +111,15 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
             </S.SummaryProgressTrack>
           </div>
           <S.SummaryStat>
-            <S.SummaryStatValue>{completedStages} / {stages.length}</S.SummaryStatValue>
+            <S.SummaryStatValue>
+              {completedStages} / {stages.length}
+            </S.SummaryStatValue>
             <S.SummaryLabel>Этапов пройдено</S.SummaryLabel>
           </S.SummaryStat>
           <S.SummaryStat>
-            <S.SummaryStatValue>{completedCount} / {totalCount}</S.SummaryStatValue>
+            <S.SummaryStatValue>
+              {completedCount} / {totalCount}
+            </S.SummaryStatValue>
             <S.SummaryLabel>Задач выполнено</S.SummaryLabel>
           </S.SummaryStat>
         </S.PlanSummary>
@@ -123,7 +142,11 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
                   onClick={() =>
                     setOpenStages((current) => {
                       const next = new Set(current);
-                      next.has(stage.id) ? next.delete(stage.id) : next.add(stage.id);
+                      if (next.has(stage.id)) {
+                        next.delete(stage.id);
+                      } else {
+                        next.add(stage.id);
+                      }
                       return next;
                     })
                   }
@@ -134,7 +157,9 @@ export const PlanDream: React.FC<PlanDreamProps> = ({ dreamId, stages: serverSta
                     </svg>
                   </S.StageChevron>
 
-                  <S.StageTitle>{stageIndex + 1}. {stage.title}</S.StageTitle>
+                  <S.StageTitle>
+                    {stageIndex + 1}. {stage.title}
+                  </S.StageTitle>
                   {stageProgress === 100 && <S.StageBadge $completed>Выполнено</S.StageBadge>}
                   {stage.tasks.length > 0 && <S.StageProgress>{stageProgress}%</S.StageProgress>}
                 </S.StageHeader>

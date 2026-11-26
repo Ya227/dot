@@ -114,6 +114,11 @@ pool.query = async (sql, values = []) => {
     const dream = dreams.get(values[0]);
     return rows(dream && dream.user_id === values[1] ? [dream] : []);
   }
+  if (query.startsWith("SELECT d.*")) {
+    assert.match(query, /FROM dreams d WHERE d\.id = \$1 AND d\.user_id = \$2/);
+    const dream = dreams.get(values[0]);
+    return rows(dream && dream.user_id === values[1] ? [{ ...dream, stages: [] }] : []);
+  }
   if (query.startsWith("SELECT * FROM plan_stages")) {
     return rows([]);
   }
