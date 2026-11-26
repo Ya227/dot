@@ -5,6 +5,9 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import * as S from "./navbar.styles";
 import { getAccessToken, useGetMeQuery } from "../services/authApi";
 
+export const getLogoDestination = (isAuthenticated: boolean): string =>
+  isAuthenticated ? "/dashboard" : "/";
+
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,12 +16,12 @@ export const Navbar = () => {
 
   const handleLogoClick = async () => {
     if (!getAccessToken()) {
-      navigate("/");
+      navigate(getLogoDestination(false));
       return;
     }
 
     const result = await refetch();
-    navigate(result.data ? "/dashboard" : "/");
+    navigate(getLogoDestination(Boolean(result.data)));
   };
 
   return (
