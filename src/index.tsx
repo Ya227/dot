@@ -1,9 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 
-import App from './app';
-import { GlobalStyles } from './assets/globalStyles';
+import App from "./app";
+import { GlobalStyles } from "./assets/globalStyles";
+import { store } from "./store";
 
 let root: ReactDOM.Root | null = null;
 
@@ -11,7 +13,7 @@ export default App;
 
 export const mount = (
   Component: React.ComponentType = App,
-  element: HTMLElement | null = document.getElementById('app'),
+  element: HTMLElement | null = document.getElementById("app"),
 ) => {
   if (!element) {
     throw new Error('Не найден элемент с id "app" для запуска приложения.');
@@ -23,17 +25,21 @@ export const mount = (
   root.render(
     <>
       <GlobalStyles />
-      <Component />
-    </>
-  )
+      <Provider store={store}>
+        <Component />
+      </Provider>
+    </>,
+  );
 
   if (module.hot) {
-    module.hot.accept('./app', () => {
+    module.hot.accept("./app", () => {
       root?.render(
-      <>
-        <GlobalStyles />
-        <App />
-      </>
+        <>
+          <GlobalStyles />
+          <Provider store={store}>
+            <App />
+          </Provider>
+        </>,
       );
     });
   }

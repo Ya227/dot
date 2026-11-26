@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 
-import im from '../../public/сonfue.jpg'
+import im from "../../public/сonfue.jpg";
 
 function Habits() {
-    return (
-        <div>
-            <h1>Пока не готово!</h1>
-            <img src={im} alt="" />
-        </div>
-    )
+  return (
+    <div>
+      <h1>Пока не готово!</h1>
+      <img src={im} alt="" />
+    </div>
+  );
 }
 
 export default Habits;

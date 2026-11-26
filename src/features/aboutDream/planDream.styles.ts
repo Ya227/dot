@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const PlanSection = styled.div`
   background: var(--page);
@@ -54,10 +54,10 @@ export const ProgressCircle = styled.div<ProgressCircleProps>`
   display: grid;
   place-items: center;
   transition: background 0.35s ease;
-  
+
   background: conic-gradient(
-    var(--purple, #7C3AED) ${(props) => props.$progressDeg}deg,
-    var(--lavender, #EDE9FE) ${(props) => props.$progressDeg}deg
+    var(--purple, #7c3aed) ${(props) => props.$progressDeg}deg,
+    var(--lavender, #ede9fe) ${(props) => props.$progressDeg}deg
   );
 `;
 
@@ -70,7 +70,7 @@ export const ProgressInner = styled.div`
   place-items: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--purple-dark, #5B21B6);
+  color: var(--purple-dark, #5b21b6);
 `;
 
 export const WeeklyWidgetInfo = styled.div``;
@@ -110,7 +110,7 @@ export const StepCardTitle = styled.h4`
 `;
 
 interface StepCardProps {
-  status?: 'completed' | 'in_progress' | 'pending';
+  status?: "completed" | "in_progress" | "pending";
 }
 
 export const StepCard = styled.div<StepCardProps>`
@@ -129,12 +129,16 @@ export const StepCard = styled.div<StepCardProps>`
     box-shadow: 0 4px 12px rgba(124, 58, 237, 0.04);
   }
 
-  ${(props) => props.status === 'in_progress' && `
+  ${(props) =>
+    props.status === "in_progress" &&
+    `
     border-color: var(--purple);
     background: var(--surface);
   `}
 
-  ${(props) => props.status === 'completed' && `
+  ${(props) =>
+    props.status === "completed" &&
+    `
     background: var(--surface);
     opacity: 0.75;
     
@@ -170,7 +174,7 @@ export const StepCardStatusWrapper = styled.div`
 `;
 
 interface BadgeProps {
-  variant: 'completed' | 'progress' | 'pending';
+  variant: "completed" | "progress" | "pending";
 }
 
 export const StatusBadge = styled.div<BadgeProps>`
@@ -181,18 +185,24 @@ export const StatusBadge = styled.div<BadgeProps>`
   align-items: center;
   justify-content: center;
 
-  ${(props) => props.variant === 'completed' && `
+  ${(props) =>
+    props.variant === "completed" &&
+    `
     background: var(--purple-dark);
     color: var(--page);
     font-size: 0.75rem;
     font-weight: bold;
   `}
 
-  ${(props) => props.variant === 'progress' && `
+  ${(props) =>
+    props.variant === "progress" &&
+    `
     border: 2px solid var(--purple);
   `}
 
-  ${(props) => props.variant === 'pending' && `
+  ${(props) =>
+    props.variant === "pending" &&
+    `
     border: 2px solid var(--border);
     background: var(--page);
   `}
@@ -243,4 +253,319 @@ export const PlanSectionFooter = styled.div`
   margin-top: 2rem;
   font-size: 0.75rem;
   color: var(--muted);
+`;
+
+export const PlanSummary = styled.div`
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) repeat(3, auto);
+  gap: 1.25rem;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--page);
+`;
+
+export const SummaryLabel = styled.p`
+  margin: 0 0 0.25rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+`;
+
+export const SummaryValue = styled.div`
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--violet);
+`;
+
+export const SummaryProgressTrack = styled.div`
+  height: 8px;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: var(--lavender);
+  overflow: hidden;
+`;
+
+export const SummaryProgressFill = styled.div<{ width: number }>`
+  height: 100%;
+  width: ${(props) => props.width}%;
+  border-radius: inherit;
+  background: var(--purple);
+`;
+
+export const SummaryStat = styled.div`
+  min-width: 90px;
+  text-align: center;
+`;
+
+export const SummaryStatValue = styled.div`
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+`;
+
+export const StageCard = styled.section<{ $open: boolean }>`
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--page);
+  overflow: hidden;
+`;
+
+export const StageHeader = styled.button`
+  width: 100%;
+  min-height: 68px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+`;
+
+export const StageTitle = styled.span`
+  font-weight: 750;
+`;
+
+export const StageBadge = styled.span<{ $completed?: boolean }>`
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  color: ${(props) => (props.$completed ? "#16866f" : "var(--purple-dark)")};
+  background: ${(props) => (props.$completed ? "#dff6ef" : "var(--lavender)")};
+  font-size: 0.75rem;
+  font-weight: 700;
+`;
+
+export const StageProgress = styled.span`
+  color: var(--purple);
+  font-weight: 800;
+`;
+
+export const StageTasks = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+`;
+
+export const TaskRow = styled.label`
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 52px;
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+`;
+
+export const StageChevron = styled.span<{ $open: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: inherit;
+  transition: transform 0.2s ease;
+  transform: ${({ $open }) => ($open ? 'rotate(90deg)' : 'rotate(0deg)')};
+
+  svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+`;
+
+
+export const TaskCheckbox = styled.input`
+  width: 18px;
+  height: 18px;
+  accent-color: var(--purple);
+`;
+
+export const TaskTitle = styled.span<{ $completed?: boolean }>`
+  color: var(--ink);
+  font-size: 0.9rem;
+  ${(props) => props.$completed && `text-decoration: line-through; color: var(--muted);`}
+`;
+
+export const TaskDeadline = styled.span`
+  color: var(--muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+`;
+
+export const EmptyPlan = styled.div`
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(35, 32, 52, 0.35);
+`;
+
+export const Modal = styled.div`
+  width: min(720px, 100%);
+  max-height: calc(100vh - 3rem);
+  overflow: auto;
+  border-radius: 1.25rem;
+  background: var(--page);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 70px rgba(35, 32, 52, 0.24);
+  padding: 1.5rem;
+`;
+
+export const ModalTitle = styled.h2`
+  margin: 0 0 1.25rem;
+  color: var(--violet);
+`;
+
+export const DraftStage = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+`;
+
+export const DraftRow = styled.div`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px 44px;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.65rem;
+`;
+
+export const DraftInput = styled.input`
+  width: 100%;
+  height: 44px;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface);
+  color: var(--ink);
+
+  &:focus {
+    outline: none;
+    border-color: var(--purple);
+  }
+`;
+
+export const DraftButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  margin-top: 0.75rem; /* создаёт отступ от инпута сверху, равный отступу снизу */
+  border: 1px solid var(--purple);
+  border-radius: 0.55rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  padding: 0.55rem 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+`;
+
+export const DraftRemoveButton = styled.button`
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--purple);
+    background: var(--lavender);
+  }
+`;
+
+export const ModalActions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+`;
+
+export const DraftStageHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+`;
+
+export const DraftStageNumber = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--purple-dark);
+  opacity: 0.85;
+`;
+
+export const DraftStageTitleInput = styled(DraftInput)`
+  width: calc(100% - 44px - 0.75rem);
+  height: 44px;
+  padding: 0 1rem;
+  font-weight: 700;
+  font-size: 1.02rem;
+  margin-bottom: 0.35rem;
+  background: color-mix(in srgb, var(--purple) 5%, var(--page));
+  border-color: color-mix(in srgb, var(--purple) 40%, transparent);
+
+  &:focus {
+    background: var(--page);
+  }
+`;
+
+export const TaskAiBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  text-decoration: none;
+  color: var(--purple-dark);
+  background: color-mix(in srgb, var(--purple) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--purple) 35%, transparent);
+
+  &::before {
+    content: "✦";
+    font-size: 0.62rem;
+  }
 `;

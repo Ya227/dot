@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import * as S from "./createDreamForm.styles";
+import { getApiErrorMessage, useCreateDreamMutation } from "../../services/dreamsApi";
+
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+const readFileAsDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        resolve(reader.result);
+      } else {
+        reject(new Error("Не удалось прочитать файл изображения"));
+      }
+    };
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Не удалось прочитать файл изображения"));
+    reader.onabort = () => reject(new Error("Чтение файла изображения прервано"));
+    reader.readAsDataURL(file);
+  });
 
 export interface DreamFormData {
   title: string;
-  category: string;
   description: string;
   deadline: string;
   image: File | null;
@@ -17,7 +36,6 @@ interface CreateDreamFormProps {
 export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<DreamFormData>({
     title: "",
-    category: "",
     description: "",
     deadline: "",
     image: null,
@@ -25,15 +43,25 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [createDream, { isLoading: isSubmitting }] = useCreateDreamMutation();
+
+  useEffect(
+    () => () => {
+      if (imagePreviewUrl) {
+        URL.revokeObjectURL(imagePreviewUrl);
+      }
+    },
+    [imagePreviewUrl],
+  );
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.title.trim()) {
       newErrors.title = "Введите название мечты";
-    }
-    if (!formData.category) {
-      newErrors.category = "Выберите категорию";
     }
     if (!formData.description.trim()) {
       newErrors.description = "Заполните описание мечты";
@@ -46,11 +74,11 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setSubmitError("");
+    setIsSubmitted(false);
 
     // Очищаем ошибку при вводе
     if (errors[name]) {
@@ -60,19 +88,65 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file }));
-      setImagePreviewUrl(URL.createObjectURL(file));
+    if (!file) {
+      return;
     }
+
+    setIsSubmitted(false);
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      setFormData((prev) => ({ ...prev, image: null }));
+      setImagePreviewUrl(null);
+      setSubmitError("Выберите изображение в формате JPG, PNG или WebP.");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      setFormData((prev) => ({ ...prev, image: null }));
+      setImagePreviewUrl(null);
+      setSubmitError("Размер изображения не должен превышать 5 МБ.");
+      e.target.value = "";
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, image: file }));
+    setImagePreviewUrl(URL.createObjectURL(file));
+    setSubmitError("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      if (onSubmit) {
-        onSubmit(formData);
+    if (!validate()) {
+      return;
+    }
+
+    setSubmitError("");
+    setIsSubmitted(false);
+
+    try {
+      const imageUrl = formData.image ? await readFileAsDataUrl(formData.image) : null;
+      await createDream({
+        title: formData.title,
+        description: formData.description,
+        target_date: formData.deadline,
+        image_url: imageUrl,
+      }).unwrap();
+
+      onSubmit?.(formData);
+      setFormData({
+        title: "",
+        description: "",
+        deadline: "",
+        image: null,
+      });
+      setImagePreviewUrl(null);
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
       }
-      // Очистка формы при необходимости
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Ошибка при сохранении мечты:", error);
+      setSubmitError(getApiErrorMessage(error, "Не удалось сохранить мечту. Попробуйте ещё раз."));
     }
   };
 
@@ -87,8 +161,9 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
           <S.Label>Обложка мечты</S.Label>
           <S.ImageUploadBox hasPreview={!!imagePreviewUrl}>
             <S.HiddenFileInput
+              ref={imageInputRef}
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp"
               onChange={handleFileChange}
             />
             {imagePreviewUrl ? (
@@ -132,26 +207,6 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
           {errors.title && <S.ErrorMessage>{errors.title}</S.ErrorMessage>}
         </S.FormGroup>
 
-        {/* Категория */}
-        <S.FormGroup>
-          <S.Label htmlFor="category">Категория</S.Label>
-          <S.Select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            hasError={!!errors.category}
-          >
-            <option value="">Выберите категорию...</option>
-            <option value="business">Бизнес и карьера</option>
-            <option value="travel">Путешествия</option>
-            <option value="education">Образование и навыки</option>
-            <option value="lifestyle">Лайфстайл и здоровье</option>
-            <option value="creative">Творчество</option>
-          </S.Select>
-          {errors.category && <S.ErrorMessage>{errors.category}</S.ErrorMessage>}
-        </S.FormGroup>
-
         {/* Дедлайн */}
         <S.FormGroup>
           <S.Label htmlFor="deadline">Планируемая дата достижения</S.Label>
@@ -180,7 +235,11 @@ export const CreateDreamForm: React.FC<CreateDreamFormProps> = ({ onSubmit }) =>
           {errors.description && <S.ErrorMessage>{errors.description}</S.ErrorMessage>}
         </S.FormGroup>
 
-        <S.SubmitButton type="submit">Создать мечту ✨</S.SubmitButton>
+        {submitError && <S.ErrorMessage role="alert">{submitError}</S.ErrorMessage>}
+        {isSubmitted && <S.UploadText role="status">Мечта успешно сохранена!</S.UploadText>}
+        <S.SubmitButton type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Сохраняем..." : "Создать мечту ✨"}
+        </S.SubmitButton>
       </S.StyledForm>
     </S.FormContainer>
   );

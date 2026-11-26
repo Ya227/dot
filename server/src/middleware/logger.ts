@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Middleware для логирования входящих запросов.
@@ -8,10 +8,10 @@ const logger = (req: Request, res: Response, next: NextFunction): void => {
   const start = Date.now();
 
   // Когда ответ будет отправлен, логируем информацию
-  res.on('finish', () => {
+  res.on("finish", () => {
     const duration = Date.now() - start;
     console.log(
-      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`
+      `[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} - ${duration}ms`,
     );
   });
 

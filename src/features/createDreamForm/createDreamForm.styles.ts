@@ -13,7 +13,7 @@ const fadeIn = keyframes`
 `;
 
 export const FormContainer = styled.div`
-  background: linear-gradient(135deg, #5B21B6 0%, #7749c1 100%);
+  background: linear-gradient(135deg, #5b21b6 0%, #7749c1 100%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 24px;
   padding: 32px;
@@ -37,7 +37,7 @@ export const FormTitle = styled.h2`
   font-weight: 700;
   color: #ffffff;
   margin: 0 0 8px 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
 `;
 
 export const FormSubtitle = styled.p`
@@ -71,16 +71,16 @@ export const Input = styled.input<{ hasError?: boolean }>`
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid ${(props) => (props.hasError ? "#f87171" : "rgba(255, 255, 255, 0.4)")};
-  background: #6D3ABD;
+  background: #6d3abd;
   font-size: 14px;
   color: #ffffff;
   outline: none;
   transition: all 0.2s ease;
 
-  color-scheme: dark; 
+  color-scheme: dark;
 
   &::-webkit-calendar-picker-indicator {
-    filter: invert(1); 
+    filter: invert(1);
     cursor: pointer;
     opacity: 0.8;
     transition: opacity 0.2s ease;
@@ -101,36 +101,12 @@ export const Input = styled.input<{ hasError?: boolean }>`
   }
 `;
 
-export const Select = styled.select<{ hasError?: boolean }>`
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid ${(props) => (props.hasError ? "#f87171" : "rgba(255, 255, 255, 0.4)")};
-  background: #6D3ABD;
-  font-size: 14px;
-  color: #ffffff;
-  outline: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  option {
-    background: #6D3ABD;
-    color: #ffffff;
-  }
-
-  &:focus {
-    border-color: ${(props) => (props.hasError ? "#f87171" : "#ffffff")};
-    background: #733dd0;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
-  }
-`;
-
 export const TextArea = styled.textarea<{ hasError?: boolean }>`
   width: 100%;
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid ${(props) => (props.hasError ? "#f87171" : "rgba(255, 255, 255, 0.4)")};
-  background: #6D3ABD;
+  background: #6d3abd;
   font-size: 14px;
   color: #ffffff;
   outline: none;
@@ -160,7 +136,7 @@ export const ImageUploadBox = styled.label<{ hasPreview?: boolean }>`
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  background-color: #6D3ABD;
+  background-color: #6d3abd;
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
@@ -202,7 +178,7 @@ export const ErrorMessage = styled.span`
 
 export const SubmitButton = styled.button`
   background-color: #ffffff;
-  color: #5B21B6;
+  color: #5b21b6;
   padding: 14px 24px;
   border-radius: 14px;
   border: none;

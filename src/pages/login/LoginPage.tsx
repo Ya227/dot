@@ -1,37 +1,54 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from "react";
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
-import * as S from './LoginPage.styles';
+import * as S from "./LoginPage.styles";
+import { useLoginMutation, setAccessToken } from "../../services/authApi";
+import { getApiErrorMessage } from "../../services/dreamsApi";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>('');
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
+  const [error, setError] = useState<string>("");
+  const [login, { isLoading }] = useLoginMutation();
+  const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) setError('');
+    if (error) setError("");
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.email.trim() || !formData.password) {
-      setError('Пожалуйста, заполните все поля');
+      setError("Пожалуйста, заполните все поля");
       return;
     }
     if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      setError('Введите корректный email');
+      setError("Введите корректный email");
       return;
     }
 
-    navigate('/dashboard');
+    try {
+      const data = await login({
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+      }).unwrap();
+
+      setAccessToken(data.token);
+      navigate("/dashboard");
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+
+      if (status === 401) {
+        setError("Неверный email или пароль");
+      } else {
+        setError(getApiErrorMessage(err, "Не удалось войти"));
+      }
+    }
   };
 
   return (
@@ -46,7 +63,10 @@ export const LoginPage = () => {
 
         {error && <S.ErrorMessage>{error}</S.ErrorMessage>}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        >
           <S.InputGroup>
             <label htmlFor="email">Email</label>
             <input
@@ -71,8 +91,8 @@ export const LoginPage = () => {
             />
           </S.InputGroup>
 
-          <S.SubmitButton type="submit">
-            Войти
+          <S.SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? "Вход..." : "Войти"}
           </S.SubmitButton>
         </form>
 

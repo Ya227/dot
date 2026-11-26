@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const DreamPage = styled.div`
   min-height: 100vh;
@@ -63,7 +63,7 @@ export const DreamHeaderBarFill = styled.div<{ width?: string }>`
   background: var(--purple);
   height: 100%;
   border-radius: 9999px;
-  width: ${(props) => props.width || '0%'};
+  width: ${(props) => props.width || "0%"};
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
@@ -87,6 +87,24 @@ export const DreamHeaderLabel = styled.p`
 export const DreamHeaderNavWrapper = styled.div`
   max-width: 1200px;
   margin: 1.5rem auto 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+export const PlanActionButton = styled.button`
+  margin-bottom: 0.35rem;
+  border: 1px solid var(--purple);
+  border-radius: 0.65rem;
+  background: var(--page);
+  color: var(--purple-dark);
+  padding: 0.65rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--lavender);
+  }
 `;
 
 export const DreamTabs = styled.nav`
