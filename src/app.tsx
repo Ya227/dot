@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
 
 import Navbar from "./features/navbar";
-import AboutDream from "./pages/aboutDream";
+import AboutDream from "./pages/aboutDream/aboutDream";
 import Dashboard from "./pages/dashboard";
 import FormDreams from "./pages/dreamform";
 import Habits from "./pages/habits";

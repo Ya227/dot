@@ -60,11 +60,13 @@ export const RegisterPage = () => {
 
       setAccessToken(data.token);
       navigate("/dashboard");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
       // 409 — email занят
-      if (err?.status === 409) {
+      if (status === 409) {
         setError("Этот email уже зарегистрирован");
-      } else if (err?.status === 400) {
+      } else if (status === 400) {
         setError(getApiErrorMessage(err, "Проверьте правильность заполнения полей"));
       } else {
         setError(getApiErrorMessage(err, "Не удалось зарегистрироваться"));

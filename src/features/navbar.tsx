@@ -3,16 +3,28 @@ import React from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 
 import * as S from "./navbar.styles";
+import { getAccessToken, useGetMeQuery } from "../services/authApi";
 
 export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isLandingPage = location.pathname === "/";
+  const { refetch } = useGetMeQuery(undefined, { skip: !getAccessToken() });
+
+  const handleLogoClick = async () => {
+    if (!getAccessToken()) {
+      navigate("/");
+      return;
+    }
+
+    const result = await refetch();
+    navigate(result.data ? "/dashboard" : "/");
+  };
 
   return (
     <S.NavbarContainer>
       <S.NavInner>
-        <S.LogoLink onClick={() => navigate("/")}>
+        <S.LogoLink onClick={handleLogoClick}>
           d<span className="dot">.</span>t
         </S.LogoLink>
         {isLandingPage ? (

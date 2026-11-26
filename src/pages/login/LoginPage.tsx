@@ -39,8 +39,11 @@ export const LoginPage = () => {
 
       setAccessToken(data.token);
       navigate("/dashboard");
-    } catch (err: any) {
-      if (err?.status === 401) {
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+
+      if (status === 401) {
         setError("Неверный email или пароль");
       } else {
         setError(getApiErrorMessage(err, "Не удалось войти"));

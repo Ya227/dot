@@ -10,16 +10,32 @@ import {
 import { getApiErrorMessage } from "../../services/dreamsApi";
 
 const CameraIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
     <circle cx="12" cy="13" r="4"></circle>
   </svg>
 );
 
 const SparklesIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
   </svg>
 );
@@ -99,9 +115,11 @@ export const ProfilePage = () => {
       setEmailPassword("");
       setSuccess("Email обновлён");
       refetch();
-    } catch (err: any) {
-      if (err?.status === 409) setError("Этот email уже занят");
-      else if (err?.status === 400) setError("Проверьте email и пароль");
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+      if (status === 409) setError("Этот email уже занят");
+      else if (status === 400) setError("Проверьте email и пароль");
       else setError(getApiErrorMessage(err, "Не удалось сменить email"));
     }
   };
@@ -132,23 +150,31 @@ export const ProfilePage = () => {
       setConfirmNewPassword("");
       setPwdOpen(false);
       setSuccess("Пароль обновлён");
-    } catch (err: any) {
-      if (err?.status === 400) setError("Текущий пароль неверен");
+    } catch (err: unknown) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err ? err.status : undefined;
+      if (status === 400) setError("Текущий пароль неверен");
       else setError(getApiErrorMessage(err, "Не удалось сменить пароль"));
     }
   };
 
-  if (isLoading) return <S.PageWrapper><S.Container>Загрузка профиля…</S.Container></S.PageWrapper>;
+  if (isLoading)
+    return (
+      <S.PageWrapper>
+        <S.Container>Загрузка профиля…</S.Container>
+      </S.PageWrapper>
+    );
   if (isError || !me) {
     return (
-      <S.PageWrapper><S.Container>
-        Не удалось загрузить профиль. <button onClick={() => refetch()}>Повторить</button>
-      </S.Container></S.PageWrapper>
+      <S.PageWrapper>
+        <S.Container>
+          Не удалось загрузить профиль. <button onClick={() => refetch()}>Повторить</button>
+        </S.Container>
+      </S.PageWrapper>
     );
   }
 
-  const initials =
-    `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase() || "??";
+  const initials = `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}`.toUpperCase() || "??";
 
   return (
     <S.PageWrapper>
@@ -164,12 +190,17 @@ export const ProfilePage = () => {
           <S.ProfileCard>
             <S.AvatarWrapper>
               {me.avatar_url ? (
-                <img src={me.avatar_url} alt="avatar"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} />
+                <img
+                  src={me.avatar_url}
+                  alt="avatar"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                />
               ) : (
                 <div className="avatar">{initials}</div>
               )}
-              <div className="edit-icon"><CameraIcon /></div>
+              <div className="edit-icon">
+                <CameraIcon />
+              </div>
             </S.AvatarWrapper>
 
             <S.ProfileName>
@@ -183,7 +214,15 @@ export const ProfilePage = () => {
             <S.DreamingSince>
               <SparklesIcon />
               <div>
-                <strong>В Dot с {me.created_at ? new Date(me.created_at).toLocaleDateString("ru-RU", { month: "long", year: "numeric" }) : "недавно"}</strong>
+                <strong>
+                  В Dot с{" "}
+                  {me.created_at
+                    ? new Date(me.created_at).toLocaleDateString("ru-RU", {
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "недавно"}
+                </strong>
               </div>
             </S.DreamingSince>
           </S.ProfileCard>
@@ -191,15 +230,25 @@ export const ProfilePage = () => {
           {/* ПРАВАЯ КОЛОНКА */}
           <S.SettingsCard>
             <S.Tabs>
-              <S.Tab active={activeTab === "settings"} onClick={() => setActiveTab("settings")}>Настройки</S.Tab>
-              <S.Tab active={activeTab === "subscription"} onClick={() => setActiveTab("subscription")}>Подписка</S.Tab>
+              <S.Tab active={activeTab === "settings"} onClick={() => setActiveTab("settings")}>
+                Настройки
+              </S.Tab>
+              <S.Tab
+                active={activeTab === "subscription"}
+                onClick={() => setActiveTab("subscription")}
+              >
+                Подписка
+              </S.Tab>
             </S.Tabs>
 
             {feedback && (
-              <div style={{
-                color: feedback.type === "error" ? "#ef4444" : "#22c55e",
-                fontSize: 14, padding: "8px 0",
-              }}>
+              <div
+                style={{
+                  color: feedback.type === "error" ? "#ef4444" : "#22c55e",
+                  fontSize: 14,
+                  padding: "8px 0",
+                }}
+              >
                 {feedback.text}
               </div>
             )}
@@ -212,13 +261,19 @@ export const ProfilePage = () => {
               <S.FormRow>
                 <S.InputGroup>
                   <label>Имя</label>
-                  <input type="text" value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)} />
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
                 </S.InputGroup>
                 <S.InputGroup>
                   <label>Фамилия</label>
-                  <input type="text" value={lastName}
-                    onChange={(e) => setLastName(e.target.value)} />
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
                 </S.InputGroup>
               </S.FormRow>
               <S.SaveButton type="button" onClick={handleSaveProfile} disabled={savingProfile}>
@@ -231,13 +286,19 @@ export const ProfilePage = () => {
               <S.FormRow>
                 <S.InputGroup>
                   <label>Новый email</label>
-                  <input type="email" value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)} />
+                  <input
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                  />
                 </S.InputGroup>
                 <S.InputGroup>
                   <label>Текущий пароль</label>
-                  <input type="password" value={emailPassword}
-                    onChange={(e) => setEmailPassword(e.target.value)} />
+                  <input
+                    type="password"
+                    value={emailPassword}
+                    onChange={(e) => setEmailPassword(e.target.value)}
+                  />
                 </S.InputGroup>
               </S.FormRow>
               <S.SaveButton type="button" onClick={handleChangeEmail} disabled={savingEmail}>
@@ -249,10 +310,17 @@ export const ProfilePage = () => {
               <S.InputGroup>
                 <label>Пароль</label>
                 <S.PasswordInputWrapper>
-                  <input type="text" value="••••••••••••••••" readOnly
-                    style={{ letterSpacing: "2px" }} />
-                  <button type="button" className="change-link"
-                    onClick={() => setPwdOpen((v) => !v)}>
+                  <input
+                    type="text"
+                    value="••••••••••••••••"
+                    readOnly
+                    style={{ letterSpacing: "2px" }}
+                  />
+                  <button
+                    type="button"
+                    className="change-link"
+                    onClick={() => setPwdOpen((v) => !v)}
+                  >
                     {pwdOpen ? "Отмена" : "Изменить пароль"}
                   </button>
                 </S.PasswordInputWrapper>
@@ -262,22 +330,35 @@ export const ProfilePage = () => {
                 <>
                   <S.InputGroup>
                     <label>Текущий пароль</label>
-                    <input type="password" value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)} />
+                    <input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                    />
                   </S.InputGroup>
                   <S.FormRow>
                     <S.InputGroup>
                       <label>Новый пароль</label>
-                      <input type="password" value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)} />
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                      />
                     </S.InputGroup>
                     <S.InputGroup>
                       <label>Повторите новый пароль</label>
-                      <input type="password" value={confirmNewPassword}
-                        onChange={(e) => setConfirmNewPassword(e.target.value)} />
+                      <input
+                        type="password"
+                        value={confirmNewPassword}
+                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      />
                     </S.InputGroup>
                   </S.FormRow>
-                  <S.SaveButton type="button" onClick={handleChangePassword} disabled={savingPassword}>
+                  <S.SaveButton
+                    type="button"
+                    onClick={handleChangePassword}
+                    disabled={savingPassword}
+                  >
                     {savingPassword ? "Сохранение…" : "Сменить пароль"}
                   </S.SaveButton>
                 </>
@@ -290,26 +371,47 @@ export const ProfilePage = () => {
               <p>Выберите, какие напоминания вы хотите получать.</p>
 
               <S.NotificationRow>
-                <div><h4>Ежедневные отметки</h4><p>Короткое напоминание о плане на сегодня.</p></div>
+                <div>
+                  <h4>Ежедневные отметки</h4>
+                  <p>Короткое напоминание о плане на сегодня.</p>
+                </div>
                 <S.ToggleSwitch>
-                  <input type="checkbox" checked={dailyCheckIns}
-                    onChange={() => setDailyCheckIns(!dailyCheckIns)} /><span></span>
+                  <input
+                    type="checkbox"
+                    checked={dailyCheckIns}
+                    onChange={() => setDailyCheckIns(!dailyCheckIns)}
+                  />
+                  <span></span>
                 </S.ToggleSwitch>
               </S.NotificationRow>
 
               <S.NotificationRow>
-                <div><h4>Еженедельный итог</h4><p>Воскресный обзор вашего прогресса.</p></div>
+                <div>
+                  <h4>Еженедельный итог</h4>
+                  <p>Воскресный обзор вашего прогресса.</p>
+                </div>
                 <S.ToggleSwitch>
-                  <input type="checkbox" checked={weeklyReflection}
-                    onChange={() => setWeeklyReflection(!weeklyReflection)} /><span></span>
+                  <input
+                    type="checkbox"
+                    checked={weeklyReflection}
+                    onChange={() => setWeeklyReflection(!weeklyReflection)}
+                  />
+                  <span></span>
                 </S.ToggleSwitch>
               </S.NotificationRow>
 
               <S.NotificationRow>
-                <div><h4>Корректировка плана</h4><p>Когда Dot замечает, что план можно улучшить.</p></div>
+                <div>
+                  <h4>Корректировка плана</h4>
+                  <p>Когда Dot замечает, что план можно улучшить.</p>
+                </div>
                 <S.ToggleSwitch>
-                  <input type="checkbox" checked={planAdjustments}
-                    onChange={() => setPlanAdjustments(!planAdjustments)} /><span></span>
+                  <input
+                    type="checkbox"
+                    checked={planAdjustments}
+                    onChange={() => setPlanAdjustments(!planAdjustments)}
+                  />
+                  <span></span>
                 </S.ToggleSwitch>
               </S.NotificationRow>
             </S.Section>

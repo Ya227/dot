@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import * as S from "./aboutDream.styles";
-import { DashboardDream } from "../features/aboutDream/boardDream";
-import { CreatePlanDream } from "../features/aboutDream/createPlanDream";
-import { EditPlanDream } from "../features/aboutDream/editPlanDream";
-import { PlanDream } from "../features/aboutDream/planDream";
-import { useGetDreamQuery, useGetDreamsQuery } from "../services/dreamsApi";
+import { DashboardDream } from "../../features/aboutDream/boardDream";
+import { CreatePlanDream } from "../../features/aboutDream/createPlanDream";
+import { EditPlanDream } from "../../features/aboutDream/editPlanDream";
+import { PlanDream } from "../../features/aboutDream/planDream";
+import { useGetDreamQuery, useGetDreamsQuery } from "../../services/dreamsApi";
 
 type TabType = "План" | "Доска" | "Ресурсы" | "Чат";
 
@@ -73,7 +73,9 @@ export const AboutDream: React.FC = () => {
           {activeTab === "План" && dreamId && (
             <S.PlanActionButton
               type="button"
-              onClick={() => (dream?.stages.length ? setEditPlanOpen(true) : setCreatePlanOpen(true))}
+              onClick={() =>
+                dream?.stages.length ? setEditPlanOpen(true) : setCreatePlanOpen(true)
+              }
             >
               {dream?.stages.length ? "Изменить план" : "Создать план"}
             </S.PlanActionButton>
