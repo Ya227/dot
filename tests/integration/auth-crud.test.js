@@ -5,9 +5,9 @@ const { after, before, beforeEach, describe, it } = require("node:test");
 process.env.JWT_SECRET = "test-only-secret-that-is-at-least-32-bytes-long";
 process.env.JWT_EXPIRES_IN = "1h";
 
-const app = require("../dist/app").default;
-const pool = require("../dist/models/database").default;
-const { assertJwtConfiguration } = require("../dist/utils/jwt");
+const app = require("../../server/dist/app").default;
+const pool = require("../../server/dist/models/database").default;
+const { assertJwtConfiguration } = require("../../server/dist/utils/jwt");
 
 let server;
 let baseUrl;
